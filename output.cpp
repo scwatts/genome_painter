@@ -4,9 +4,15 @@
 namespace output {
 
 
-void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::string &output_fp) {
+void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::vector<std::string> species_names, std::string &output_fp) {
     FILE *output_fh = fopen(output_fp.c_str(), "w");
 
+    // Header
+    for (const auto& species_name : species_names) {
+        fprintf(output_fh, "#%s\n", species_name.c_str());
+    }
+
+    // Data
     for (const auto& fasta_paint : fasta_painting) {
         size_t position = 0;
         for (const auto& paint_bucket : fasta_paint.paint) {

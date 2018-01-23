@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Write painted genome
-    output::write_painted_genome(fasta_painting, options.output_fp);
+    output::write_painted_genome(fasta_painting, database.species_names, options.output_fp);
 
     return 0;
 }

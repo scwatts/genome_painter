@@ -12,7 +12,7 @@
 namespace output {
 
 
-void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::string &output_fp);
+void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::vector<std::string> species_names, std::string &output_fp);
 
 
 } // namespace output
