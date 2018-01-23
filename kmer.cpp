@@ -47,7 +47,7 @@ unsigned long long encode_kmer_reverse(std::string &sequence, size_t i) {
 }
 
 
-bool encode_forward_nucleotide(char &nucleotide, unsigned long long *nucleotide_bincode) {
+bool encode_forward_nucleotide(char nucleotide, unsigned long long *nucleotide_bincode) {
     switch (nucleotide) {
         case 'A':
             *nucleotide_bincode = 0;
@@ -68,7 +68,7 @@ bool encode_forward_nucleotide(char &nucleotide, unsigned long long *nucleotide_
 }
 
 
-bool encode_reverse_nucleotide(char &nucleotide, unsigned long long *nucleotide_bincode) {
+bool encode_reverse_nucleotide(char nucleotide, unsigned long long *nucleotide_bincode) {
     switch (nucleotide) {
         case 'A':
             *nucleotide_bincode = (unsigned long long)1 << 62;

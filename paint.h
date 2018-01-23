@@ -2,7 +2,11 @@
 #define __PAINT_H__
 
 
+#include <algorithm>
 #include <vector>
+
+
+#include "kmer.h"
 
 
 namespace paint {
@@ -11,9 +15,13 @@ namespace paint {
 struct PaintBucket {
     std::vector<float> probabilities;
     float max_probability;
+
+    void set_probabilities(std::vector<float> &probablities);
 };
 
 std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database &database);
+bool get_most_probable_kmer(kmer::KmerPairBin kmer_pair, db::Database &database, PaintBucket *probabilities);
+void compare_paint(std::vector<PaintBucket> &paint, PaintBucket &bucket, size_t i);
 
 
 } // namespace paint

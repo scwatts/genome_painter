@@ -4,6 +4,10 @@
 #include "paint.h"
 
 
+// TODO: think about moving header
+struct FastaPaint { std::string name; std::vector<paint::PaintBucket> paint; };
+
+
 int main(int argc, char *argv[]) {
     // Get command line arguments
     cmdline::Options options = cmdline::get_arguments(argc, argv);
@@ -15,8 +19,9 @@ int main(int argc, char *argv[]) {
     db::Database database = db::read_database(options.kmer_db_fp);
 
     // Paint genome
+    std::vector<FastaPaint> fasta_painting;
     for (auto& fasta : fastas) {
-        paint::paint_sequence(fasta, database);
+        fasta_painting.push_back(FastaPaint { fasta.name, paint::paint_sequence(fasta, database) });
     }
 
     return 0;
