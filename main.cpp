@@ -18,6 +18,11 @@ int main(int argc, char *argv[]) {
     // Paint genome
     std::vector<paint::FastaPaint> fasta_painting;
     for (auto& fasta : fastas) {
+        // Skip sequences less than size of kmer
+        if (fasta.sequence.size() < 32) {
+            continue;
+        }
+
         fasta_painting.push_back(paint::FastaPaint { fasta.name, paint::paint_sequence(fasta, database) });
     }
 
