@@ -1,11 +1,8 @@
 #include "command_line_options.h"
 #include "database.h"
 #include "genome.h"
+#include "output.h"
 #include "paint.h"
-
-
-// TODO: think about moving header
-struct FastaPaint { std::string name; std::vector<paint::PaintBucket> paint; };
 
 
 int main(int argc, char *argv[]) {
@@ -19,10 +16,13 @@ int main(int argc, char *argv[]) {
     db::Database database = db::read_database(options.kmer_db_fp);
 
     // Paint genome
-    std::vector<FastaPaint> fasta_painting;
+    std::vector<paint::FastaPaint> fasta_painting;
     for (auto& fasta : fastas) {
-        fasta_painting.push_back(FastaPaint { fasta.name, paint::paint_sequence(fasta, database) });
+        fasta_painting.push_back(paint::FastaPaint { fasta.name, paint::paint_sequence(fasta, database) });
     }
+
+    // Write painted genome
+    output::write_painted_genome(fasta_painting, options.output_fp);
 
     return 0;
 }

@@ -1,6 +1,3 @@
-#include "genome.h"
-#include "database.h"
-#include "kmer.h"
 #include "paint.h"
 
 

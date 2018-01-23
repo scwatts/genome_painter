@@ -8,7 +8,7 @@ LDLIBS=-lz
 # INC=
 
 # Files
-SOURCES=main.cpp command_line_options.cpp database.cpp paint.cpp genome.cpp kmer.cpp
+SOURCES=main.cpp command_line_options.cpp database.cpp paint.cpp genome.cpp kmer.cpp output.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=genome_painter
 

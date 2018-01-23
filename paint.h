@@ -6,6 +6,8 @@
 #include <vector>
 
 
+#include "genome.h"
+#include "database.h"
 #include "kmer.h"
 
 
@@ -17,6 +19,11 @@ struct PaintBucket {
     float max_probability;
 
     void set_probabilities(std::vector<float> &probablities);
+};
+
+struct FastaPaint {
+    std::string name;
+    std::vector<PaintBucket> paint;
 };
 
 std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database &database);
