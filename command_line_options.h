@@ -5,24 +5,27 @@
 #include <cstdio>
 #include <fstream>
 #include <string>
+#include <vector>
 
 
 #include <getopt.h>
+#include <sys/stat.h>
 
 
 namespace cmdline {
 
 
 struct Options {
-    std::string genome_fp;
+    std::vector<std::string> genome_fps;
     std::string kmer_db_fp;
-    std::string output_fp;
+    std::string output_dir;
 };
 
-void print_help();
-void print_version();
+void print_help(FILE *stdst);
+void print_version(FILE *stdst);
 Options get_arguments(int argc, char **argv);
-bool filepath_exists(std::string &filepath);
+bool is_file(std::string &filepath);
+bool is_directory(std::string &filepath);
 
 
 } // namespace cmdline
