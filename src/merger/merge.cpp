@@ -1,5 +1,3 @@
-#include "file.h"
-#include "probability.h"
 #include "merge.h"
 
 
@@ -9,17 +7,17 @@ namespace merge {
 const unsigned int MAX_DB_SIZE = 5e5;
 const unsigned int MAX_LINES = 1e6;
 
-void add_partial_reads(std::vector<file::CountFile> &fileobjects, size_t species_count, Bincodes &bincodes, countmap &kmer_db) {
+void add_partial_reads(std::vector<file::CountFile> &fileobjects, size_t species_count, Bincodes &bincodes, common::countvecmap &kmer_db) {
     // Limit memory usage
     unsigned int lines_per_species = MAX_LINES / fileobjects.size();
     bool sync_bincodes = kmer_db.size() > MAX_DB_SIZE;
 
     // Reset bincount.min
-    bincodes.min = std::numeric_limits<ullong>::max();
+    bincodes.min = std::numeric_limits<common::ullong>::max();
 
     for (size_t i = 0; i < fileobjects.size(); ++i) {
         size_t lines_read = 0;
-        ullong bincode = 0;
+        common::ullong bincode = 0;
         std::vector<std::string> line_tokens;
         while (!common::get_line_tokens(fileobjects[i].filehandle, line_tokens)) {
             ++lines_read;
@@ -48,7 +46,7 @@ void add_partial_reads(std::vector<file::CountFile> &fileobjects, size_t species
 }
 
 
-void write_completed_counts(countmap &kmer_db, std::vector<unsigned int> &species_counts, Bincodes &bincodes, float threshold, float alpha, std::string &output_fp) {
+void write_completed_counts(common::countvecmap &kmer_db, std::vector<unsigned int> &species_counts, Bincodes &bincodes, float threshold, float alpha, std::string &output_fp) {
     // Process current data; we should now have all data up to min_bincode
     // We must account for kmers which have not yet been read in for all species
     FILE *output_fh = fopen(output_fp.c_str(), "a");

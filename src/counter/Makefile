@@ -8,9 +8,9 @@ LDLIBS=-lz
 # INC=
 
 # Files
-SOURCES=main.cpp command_line_options.cpp database.cpp paint.cpp genome.cpp kmer.cpp output.cpp
+SOURCES=main.cpp command_line_options.cpp output.cpp count.cpp ../common.cpp ../genome.cpp ../kmer.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=genome_painter
+EXECUTABLE=count_kmers
 
 # Rules
 debug: CXXFLAGS+=-g -O0

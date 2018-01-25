@@ -42,14 +42,14 @@ bool is_sorted(CountFile &fileobject) {
 
     // Check that the next 1e5 lines are ordered
     size_t line_number = 0;
-    unsigned long long prev_bincode = 0;
+    common::ullong prev_bincode = 0;
     while (!common::get_line_tokens(fileobject.filehandle, line_tokens)) {
         if (line_number++ > 1e5) {
             fileobject.filehandle.seekg(0);
             return true;
         }
 
-        unsigned long long bincode = std::stoull(line_tokens[0]);
+        common::ullong bincode = std::stoull(line_tokens[0]);
         if (prev_bincode >= bincode) {
             return false;
         }

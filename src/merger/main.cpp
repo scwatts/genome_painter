@@ -4,6 +4,7 @@
 #include "command_line_options.h"
 #include "file.h"
 #include "merge.h"
+#include "../common.h"
 
 
 int main(int argc, char *argv[]) {
@@ -28,7 +29,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Merge kmer counts, count probabilites and write out
-    merge::countmap kmer_db;
+    common::countvecmap kmer_db;
     merge::Bincodes bincodes;
     unsigned int iteration = 0;
     while (true) {
@@ -49,7 +50,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (all_consumed) {
-            bincodes.min = std::numeric_limits<merge::ullong>::max();
+            bincodes.min = std::numeric_limits<common::ullong>::max();
             merge::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, options.output_fp);
             break;
         } else {

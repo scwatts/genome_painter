@@ -14,7 +14,7 @@
 namespace db {
 
 
-typedef std::unordered_map<unsigned long long,std::vector<float>> probmap;
+typedef std::unordered_map<common::ullong,std::vector<float>> probmap;
 
 struct Database {
     std::vector<std::string> species_names;
