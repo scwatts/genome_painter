@@ -28,7 +28,7 @@ Database read_database(std::string &filepath) {
 
     // Data
     line_tokens.reserve(species_count);
-    while (!get_line_tokens(database_fh, line_tokens)) {
+    while (!common::get_line_tokens(database_fh, line_tokens)) {
         long bincode = std::stoull(line_tokens[0]);
 
         // TODO: check performance

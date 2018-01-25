@@ -2,6 +2,7 @@
 #define __PAINT_H__
 
 
+#include <algorithm>
 #include <vector>
 
 
