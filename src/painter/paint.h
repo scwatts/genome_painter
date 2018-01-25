@@ -6,9 +6,9 @@
 #include <vector>
 
 
-#include "genome.h"
-#include "database.h"
-#include "kmer.h"
+#include "../genome.h"
+#include "../database.h"
+#include "../kmer.h"
 
 
 namespace paint {

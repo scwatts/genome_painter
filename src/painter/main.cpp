@@ -1,6 +1,6 @@
 #include "command_line_options.h"
-#include "database.h"
-#include "genome.h"
+#include "../database.h"
+#include "../genome.h"
 #include "output.h"
 #include "paint.h"
 
