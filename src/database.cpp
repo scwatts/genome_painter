@@ -13,7 +13,7 @@ Database read_database(std::string &filepath) {
 
     // Header; count species for probability vector size
     unsigned int species_count = 0;
-    while (!get_line_tokens(database_fh, line_tokens)) {
+    while (!common::get_line_tokens(database_fh, line_tokens)) {
         // Remove leading '#'
         line_tokens[0].erase(0, 1);
         database.species_names.push_back(line_tokens[0]);
@@ -38,27 +38,6 @@ Database read_database(std::string &filepath) {
     }
     database_fh.close();
     return database;
-}
-
-
-int get_line_tokens(std::ifstream &fh, std::vector<std::string> &line_tokens) {
-    char c;
-    std::string token;
-
-    line_tokens.clear();
-    while (fh.get(c)) {
-        if (c == '\t') {
-            line_tokens.push_back(token);
-            token.clear();
-            continue;
-        }
-        if (c == '\n') {
-            line_tokens.push_back(token);
-            return 0;
-        }
-        token.push_back(c);
-    }
-    return 1;
 }
 
 

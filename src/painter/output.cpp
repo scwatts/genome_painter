@@ -33,24 +33,4 @@ void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::v
 }
 
 
-std::string construct_output_fp(std::string &genome_fp, std::string output_dir) {
-    // Placing a trailing slash on output filepath if it doesn't already exist
-    if (output_dir.back() != '/') {
-        output_dir.push_back('/');
-    }
-
-    // Get base filename from path
-    std::string fn = genome_fp.substr(genome_fp.find_last_of('/') + 1);
-
-    // Attempt to drop some file extensions
-    fn = fn.substr(0, fn.find(".gz"));
-    fn = fn.substr(0, fn.find(".fasta"));
-    fn = fn.substr(0, fn.find(".fna"));
-
-    // ...giving up now
-    fn.append("_painted.tsv");
-    return output_dir.append(fn);
-}
-
-
 } // namespace output

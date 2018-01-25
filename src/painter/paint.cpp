@@ -60,9 +60,10 @@ void compare_paint(std::vector<PaintBucket> &paint, PaintBucket &bucket, size_t 
         end_idx = i + 32;
     }
 
+    // TODO: to save memory we could use a reference and one of each bucket on the stack
     for ( ; i < end_idx; i++) {
         if (paint[i].max_probability < bucket.max_probability) {
-            paint[i] = std::move(bucket);
+            paint[i] = bucket;
         }
     }
 }

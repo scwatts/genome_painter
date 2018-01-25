@@ -11,13 +11,13 @@ void print_help(FILE *stdst) {
     // Print Usage
     fprintf(stdst, "\n");
     fprintf(stdst, "Usage:\n");
-    fprintf(stdst, "  database_filter --genome_fp <filepath> ... --kmer_db_fp <filepath> --output_dir <filepath>\n");
+    fprintf(stdst, "  genome_painter --genome_fp <filepath> ... --kmer_db_fp <filepath> --output_dir <directorypath>\n");
     fprintf(stdst, "\n");
-    fprintf(stdst, "  -g <filepath> ..., --genome_fp <filepath> ...\n");
+    fprintf(stdst, "  -g <filepath> ..., --genome_fps <filepath> ...\n");
     fprintf(stdst, "                Genome input filepaths, space separated (FASTA format)\n");
     fprintf(stdst, "  -k <filepath>, --kmer_db_fp <filepath>\n");
     fprintf(stdst, "                Kmer database filepath\n");
-    fprintf(stdst, "  -o <filepath>, --output_dir <filepath>\n");
+    fprintf(stdst, "  -o <directorypath>, --output_dir <directorypath>\n");
     fprintf(stdst, "                Output painted data\n");
     fprintf(stdst, "Other:\n");
     fprintf(stdst, "  -h        --help\n");
@@ -28,8 +28,8 @@ void print_help(FILE *stdst) {
 
 
 void print_version(FILE *stdst) {
-    fprintf(stdst, "Program: DatabaseFilter\n");
-    fprintf(stdst, "Version 0.0.1a\n");
+    fprintf(stdst, "Program: GenomePainter\n");
+    fprintf(stdst, "Version %s\n", VERSION.c_str());
     fprintf(stdst, "Contact: Stephen Watts (s.watts2@student.unimelb.edu.au)\n");
 }
 
@@ -113,38 +113,24 @@ Options get_arguments(int argc, char **argv) {
     }
 
     for (auto& genome_fp : options.genome_fps) {
-        if (!is_file(genome_fp)) {
+        if (!common::is_file(genome_fp)) {
             print_help(stderr);
             fprintf(stderr, "\n%s: error: input file %s is not a regular file or does not exist\n", argv[0], genome_fp.c_str());
             exit(1);
         }
     }
-    if (!is_file(options.kmer_db_fp)) {
+    if (!common::is_file(options.kmer_db_fp)) {
         print_help(stderr);
         fprintf(stderr, "\n%s: error: input file %s is not a regular file or does not exist\n", argv[0], options.kmer_db_fp.c_str());
         exit(1);
     }
-    if (!is_directory(options.output_dir)) {
+    if (!common::is_directory(options.output_dir)) {
         print_help(stderr);
         fprintf(stderr, "\n%s: error: output argument %s is not a directory\n", argv[0], options.output_dir.c_str());
         exit(1);
     }
 
     return options;
-}
-
-
-bool is_file(std::string &filepath) {
-    struct stat sb;
-    stat(filepath.c_str(), &sb);
-    return sb.st_mode & S_IFREG;
-}
-
-
-bool is_directory(std::string &filepath) {
-    struct stat sb;
-    stat(filepath.c_str(), &sb);
-    return sb.st_mode & S_IFDIR;
 }
 
 

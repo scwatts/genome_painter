@@ -9,7 +9,10 @@
 
 
 #include <getopt.h>
-#include <sys/stat.h>
+
+
+#include "../common.h"
+#include "../version.h"
 
 
 namespace cmdline {
@@ -24,8 +27,6 @@ struct Options {
 void print_help(FILE *stdst);
 void print_version(FILE *stdst);
 Options get_arguments(int argc, char **argv);
-bool is_file(std::string &filepath);
-bool is_directory(std::string &filepath);
 
 
 } // namespace cmdline

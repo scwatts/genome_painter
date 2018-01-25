@@ -1,8 +1,9 @@
 #include "command_line_options.h"
-#include "../database.h"
-#include "../genome.h"
 #include "output.h"
 #include "paint.h"
+#include "../common.h"
+#include "../database.h"
+#include "../genome.h"
 
 
 int main(int argc, char *argv[]) {
@@ -37,7 +38,8 @@ int main(int argc, char *argv[]) {
 
         // Write painted genome
         fprintf(stdout, "Writing results for %s...", genome_fp.c_str());
-        std::string output_fp = output::construct_output_fp(genome_fp, options.output_dir);
+        std::string output_suffix = "_painted.tsv";
+        std::string output_fp = common::construct_output_fp(genome_fp, output_suffix, options.output_dir);
         output::write_painted_genome(fasta_painting, database.species_names, output_fp);
         fprintf(stdout, " done\n");
         fflush(stdout);

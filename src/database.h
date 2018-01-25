@@ -19,7 +19,6 @@ struct Database {
 };
 
 db::Database read_database(std::string &filepath);
-int get_line_tokens(std::ifstream &fh, std::vector<std::string> &line_tokens);
 
 
 } // namesspace db
