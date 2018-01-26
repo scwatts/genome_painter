@@ -8,47 +8,46 @@ std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database
     std::vector<PaintBucket> paint(fasta.sequence.size(), { {}, 0 });
 
     // Forward and reverse kmers
-    // TODO: use input iterator and place in kmer.cpp
     for (size_t i = 0; i < fasta.sequence.size(); i++) {
-        // Look up kmers and get kmer direction which has the most probable species
-        kmer::KmerPairBin kmer_pair = kmer::encode_substring_kmer(fasta.sequence, i);
-        PaintBucket kmer_probabilities;
-        if (get_most_probable_kmer(kmer_pair, database, &kmer_probabilities)) {
-            // See if the best one is better than the current; add or skip
-            compare_paint(paint, kmer_probabilities, i);
-        }
-    }
+        // Attempt to encode (currently we're unable to encode nucleotides other than atgc)
+        common::ullong f_bincode, r_bincode;
+        bool f_status, r_status;
+        f_status = kmer::encode_kmer(fasta.sequence, i, f_bincode, kmer::bitshift_forward, kmer::encode_forward);
+        r_status = kmer::encode_kmer(fasta.sequence, i, r_bincode, kmer::bitshift_reverse, kmer::encode_reverse);
 
+        // Check for presence in database
+        if ( !(f_status && database.probability_map.find(f_bincode) != database.probability_map.end()) ) { f_status = false; }
+        if ( !(r_status && database.probability_map.find(r_bincode) != database.probability_map.end()) ) { r_status = false; }
+
+        // If forward and reverse kmers are good, select kmer with best probabilities
+        PaintBucket kmer_probabilities;
+        if (f_status && r_status) {
+            kmer_probabilities = get_best_probabilities(f_bincode, r_bincode, database);
+        } else if (f_status) {
+            kmer_probabilities.set_probabilities(database.probability_map[f_bincode]);
+        } else if (r_status) {
+            kmer_probabilities.set_probabilities(database.probability_map[r_bincode]);
+        } else {
+            continue;
+        }
+
+        // Add current kmer_probabilities is they're higher than what is currently present
+        compare_paint(paint, kmer_probabilities, i);
+    }
     return paint;
 }
 
 
-bool get_most_probable_kmer(kmer::KmerPairBin kmer_pair, db::Database &database, PaintBucket *probabilities) {
-    // Get probabilities
+PaintBucket get_best_probabilities(common::ullong f_bincode, common::ullong r_bincode, db::Database &database) {
     PaintBucket forward, reverse;
-    if (database.probability_map.find(kmer_pair.forward_bincode) != database.probability_map.end()) {
-        forward.set_probabilities(database.probability_map[kmer_pair.forward_bincode]);
-    }
-    if (database.probability_map.find(kmer_pair.reverse_bincode) != database.probability_map.end()) {
-        reverse.set_probabilities(database.probability_map[kmer_pair.reverse_bincode]);
-    }
+    forward.set_probabilities(database.probability_map[f_bincode]);
+    reverse.set_probabilities(database.probability_map[r_bincode]);
 
-    // Ensure that at least one look up was successful
-    if (! (forward.probabilities.empty() && reverse.probabilities.empty())) {
-        // Set most probable
-        if (forward.max_probability >= reverse.max_probability) {
-            *probabilities = forward;
-            return true;
-        } else if (reverse.max_probability > forward.max_probability) {
-            *probabilities = reverse;
-            return true;
-        }
+    if (forward.max_probability > reverse.max_probability) {
+        return forward;
     } else {
-        return false;
+        return reverse;
     }
-
-    // No control zone
-    return false;
 }
 
 

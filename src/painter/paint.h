@@ -27,7 +27,7 @@ struct FastaPaint {
 };
 
 std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database &database);
-bool get_most_probable_kmer(kmer::KmerPairBin kmer_pair, db::Database &database, PaintBucket *probabilities);
+PaintBucket get_best_probabilities(common::ullong f_bincode, common::ullong r_bincode, db::Database &database);
 void compare_paint(std::vector<PaintBucket> &paint, PaintBucket &bucket, size_t i);
 
 
