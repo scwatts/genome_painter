@@ -4,7 +4,7 @@
 #include "command_line_options.h"
 #include "file.h"
 #include "merge.h"
-#include "../common.h"
+#include "lib/common.h"
 
 
 int main(int argc, char *argv[]) {

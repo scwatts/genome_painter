@@ -7,8 +7,8 @@
 #include <string>
 
 
-#include "../common.h"
-#include "../kmer.h"
+#include "lib/common.h"
+#include "lib/kmer.h"
 
 
 namespace count {

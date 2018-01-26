@@ -1,7 +1,7 @@
 #include "command_line_options.h"
 #include "count.h"
 #include "output.h"
-#include "../genome.h"
+#include "lib/genome.h"
 
 
 int main(int argc, char *argv[]) {

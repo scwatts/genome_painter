@@ -7,7 +7,7 @@
 
 
 #include "count.h"
-#include "../common.h"
+#include "lib/common.h"
 
 
 namespace output {

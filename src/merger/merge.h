@@ -10,7 +10,7 @@
 
 #include "file.h"
 #include "probability.h"
-#include "../common.h"
+#include "lib/common.h"
 
 
 namespace merge {

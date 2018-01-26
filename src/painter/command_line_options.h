@@ -11,8 +11,8 @@
 #include <getopt.h>
 
 
-#include "../common.h"
-#include "../version.h"
+#include "lib/common.h"
+#include "lib/version.h"
 
 
 namespace cmdline {

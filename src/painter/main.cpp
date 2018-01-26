@@ -1,9 +1,9 @@
 #include "command_line_options.h"
 #include "output.h"
 #include "paint.h"
-#include "../common.h"
-#include "../database.h"
-#include "../genome.h"
+#include "lib/common.h"
+#include "lib/database.h"
+#include "lib/genome.h"
 
 
 int main(int argc, char *argv[]) {

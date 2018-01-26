@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 
 
-#include "../common.h"
+#include "lib/common.h"
 
 
 namespace file {
