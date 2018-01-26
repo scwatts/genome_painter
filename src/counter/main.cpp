@@ -1,9 +1,6 @@
-#include <set>
-#include <vector>
-
-
 #include "command_line_options.h"
 #include "count.h"
+#include "output.h"
 #include "../genome.h"
 
 
@@ -25,13 +22,15 @@ int main(int argc, char *argv[]) {
         // Increment counts for those kmers found
         for (auto& kmer : sample_kmers) {
             if (kmer_counts.find(kmer) == kmer_counts.end()) {
-                kmer_counts.at(kmer) = 0;
+                kmer_counts[kmer] = 1;
+                continue;
             }
             kmer_counts.at(kmer) += 1;
         }
     }
 
     // Write out counts
+    output::write_kmer_counts(kmer_counts, options.genome_fps.size(), options.output_fp);
 
     return 0;
 }

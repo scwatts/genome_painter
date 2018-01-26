@@ -13,7 +13,7 @@
 namespace output {
 
 
-void wite_kmer_counts(count::countmap &kmer_counts, unsigned int species_counts, std::string &output_fp);
+void write_kmer_counts(count::countmap &kmer_counts, unsigned int species_counts, std::string &output_fp);
 
 
 } // namespace output

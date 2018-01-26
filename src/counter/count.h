@@ -2,6 +2,7 @@
 #define __COUNT_H__
 
 
+#include <map>
 #include <set>
 #include <string>
 
@@ -13,7 +14,7 @@
 namespace count {
 
 
-typedef std::unordered_map<common::ullong,unsigned int> countmap;
+typedef std::map<common::ullong,unsigned int> countmap;
 
 void collect_kmers(std::string &sequence, std::set<common::ullong> &sample_kmers);
 

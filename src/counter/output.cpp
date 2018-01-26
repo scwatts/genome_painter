@@ -4,11 +4,11 @@
 namespace output {
 
 
-void wite_kmer_counts(count::countmap &kmer_counts, unsigned int species_counts, std::string &output_fp) {
+void write_kmer_counts(count::countmap &kmer_counts, unsigned int species_counts, std::string &output_fp) {
     FILE *output_fh = fopen(output_fp.c_str(), "w");
 
     // Header
-    fprintf(output_fh, "#%s\n", species_counts);
+    fprintf(output_fh, "#%d\n", species_counts);
 
     // Data
     for (const auto& items : kmer_counts) {
