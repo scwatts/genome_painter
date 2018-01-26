@@ -12,16 +12,14 @@
 namespace kmer {
 
 
-struct KmerPairBin {
-    common::ullong forward_bincode;
-    common::ullong reverse_bincode;
-};
+typedef void (*bitshifter)(common::ullong &kmer_bincode);
+typedef bool (*encoder)(char nucleotide, common::ullong &nucleotide_bincode);
 
-KmerPairBin encode_substring_kmer(std::string &sequence, size_t i);
-common::ullong encode_kmer_forward(std::string &sequence, size_t i);
-common::ullong encode_kmer_reverse(std::string &sequence, size_t i);
-bool encode_forward_nucleotide(char nucleotide, common::ullong *nucleotide_bincode);
-bool encode_reverse_nucleotide(char nucleotide, common::ullong *nucleotide_bincode);
+bool encode_kmer(std::string sequence, size_t i, common::ullong &kmer_bincode, bitshifter bitshift_op, encoder encode_op);
+void bitshift_forward(common::ullong &kmer_bincode);
+void bitshift_reverse(common::ullong &kmer_bincode);
+bool encode_forward(char nucleotide, common::ullong &nucleotide_bincode);
+bool encode_reverse(char nucleotide, common::ullong &nucleotide_bincode);
 
 
 } // namespace kmer
