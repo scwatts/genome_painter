@@ -6,8 +6,8 @@
 #include <vector>
 
 
+#include "database.h"
 #include "lib/genome.h"
-#include "lib/database.h"
 #include "lib/kmer.h"
 
 

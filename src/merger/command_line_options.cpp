@@ -11,7 +11,7 @@ void print_help(FILE *stdst) {
     // Print Usage
     fprintf(stdst, "\n");
     fprintf(stdst, "Usage:\n");
-    fprintf(stdst, "  database_merger --count_fps <filepath> ... --threshold <float> --output_fp <filepath>\n");
+    fprintf(stdst, "  generate_database --count_fps <filepath> ... --threshold <float> --output_fp <filepath>\n");
     fprintf(stdst, "\n");
     fprintf(stdst, "  -c <filepath> ..., --count_fps <filepath> ...\n");
     fprintf(stdst, "                Count input filepaths, space separated\n");
@@ -30,7 +30,7 @@ void print_help(FILE *stdst) {
 
 
 void print_version(FILE *stdst) {
-    fprintf(stdst, "Program: DatabaseMerger\n");
+    fprintf(stdst, "Program: GenerateDatabase\n");
     fprintf(stdst, "Version %s\n", VERSION.c_str());
     fprintf(stdst, "Contact: Stephen Watts (s.watts2@student.unimelb.edu.au)\n");
 }

@@ -1,8 +1,8 @@
 #include "command_line_options.h"
+#include "database.h"
 #include "output.h"
 #include "paint.h"
 #include "lib/common.h"
-#include "lib/database.h"
 #include "lib/genome.h"
 
 

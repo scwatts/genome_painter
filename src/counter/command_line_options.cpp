@@ -26,7 +26,7 @@ void print_help(FILE *stdst) {
 
 
 void print_version(FILE *stdst) {
-    fprintf(stdst, "Program: DatabaseMerger\n");
+    fprintf(stdst, "Program: CountKmers\n");
     fprintf(stdst, "Version %s\n", VERSION.c_str());
     fprintf(stdst, "Contact: Stephen Watts (s.watts2@student.unimelb.edu.au)\n");
 }
