@@ -5,7 +5,6 @@ namespace db {
 
 
 Database read_database(std::string &filepath) {
-    fprintf(stdout, "Reading in database...\n");
     Database database;
 
     std::ifstream database_fh(filepath);
