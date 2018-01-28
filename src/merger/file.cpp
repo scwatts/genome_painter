@@ -41,9 +41,9 @@ bool is_sorted(CountFile &fileobject) {
     }
 
     // Check that the next 1e5 lines are ordered
-    size_t line_number = 0;
+    size_t line_number = -1;
     common::ullong prev_bincode = 0;
-    while (!common::get_line_tokens(fileobject.filehandle, line_tokens)) {
+    while (common::get_line_tokens(fileobject.filehandle, line_tokens) == 0) {
         if (line_number++ > 1e5) {
             fileobject.filehandle.seekg(0);
             return true;
