@@ -7,15 +7,21 @@ namespace common {
 // Filesystem
 bool is_file(std::string &filepath) {
     struct stat sb;
-    stat(filepath.c_str(), &sb);
-    return sb.st_mode & S_IFREG;
+    if (stat(filepath.c_str(), &sb) == 0) {
+        return (sb.st_mode & S_IFMT) == S_IFREG;
+    } else {
+        return false;
+    }
 }
 
 
 bool is_directory(std::string &filepath) {
     struct stat sb;
-    stat(filepath.c_str(), &sb);
-    return sb.st_mode & S_IFDIR;
+    if (stat(filepath.c_str(), &sb) == 0) {
+        return (sb.st_mode & S_IFMT) == S_IFDIR;
+    } else {
+        return false;
+    }
 }
 
 
