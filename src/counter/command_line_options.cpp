@@ -108,11 +108,6 @@ Options get_arguments(int argc, char **argv) {
             exit(1);
         }
     }
-    if (!common::is_file(options.output_fp)) {
-        print_help(stderr);
-        fprintf(stderr, "\n%s: error: output argument %s is not a directory\n", argv[0], options.output_fp.c_str());
-        exit(1);
-    }
 
     return options;
 }
