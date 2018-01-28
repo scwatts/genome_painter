@@ -19,7 +19,7 @@ void write_completed_counts(common::countvecmap &kmer_db, std::vector<file::Spec
     FILE *output_fh = fopen(output_fp.c_str(), "a");
     auto it = kmer_db.begin();
     while (it != kmer_db.end()) {
-        if (it->first >= bincodes.min) {
+        if (it->first > bincodes.min) {
             ++it;
             continue;
         }
