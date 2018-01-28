@@ -4,6 +4,7 @@
 #include "command_line_options.h"
 #include "file.h"
 #include "merge.h"
+#include "output.h"
 #include "lib/common.h"
 
 
@@ -28,6 +29,9 @@ int main(int argc, char *argv[]) {
         species_counts.push_back(file::get_species_counts(fileobject));
     }
 
+    // Write species count header
+    output::write_species_counts_header(fileobjects, options.output_fp);
+
     // Merge kmer counts, count probabilites and write out
     common::countvecmap kmer_db;
     merge::Bincodes bincodes;
@@ -51,10 +55,10 @@ int main(int argc, char *argv[]) {
 
         if (all_consumed) {
             bincodes.min = std::numeric_limits<common::ullong>::max();
-            merge::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, options.output_fp);
+            output::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, options.output_fp);
             break;
         } else {
-            merge::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, options.output_fp);
+            output::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, options.output_fp);
         }
         fprintf(stdout, "\tIncomplete counts %lu\n", kmer_db.size());
     }
