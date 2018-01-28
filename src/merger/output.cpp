@@ -4,16 +4,16 @@
 namespace output {
 
 
-void write_species_counts_header(std::vector<file::CountFile> &fileobjects, std::string &output_fp) {
+void write_species_counts_header(std::vector<file::SpeciesCount> &species_counts, std::string &output_fp) {
     FILE *output_fh = fopen(output_fp.c_str(), "w");
-    for (auto& fileobject : fileobjects) {
-        fprintf(output_fh, "#%s\t%d\n", fileobject.species.c_str(), fileobject.species_count);
+    for (auto& species_count : species_counts) {
+        fprintf(output_fh, "#%s\t%d\n", species_count.name.c_str(), species_count.count);
     }
     fclose(output_fh);
 }
 
 
-void write_completed_counts(common::countvecmap &kmer_db, std::vector<unsigned int> &species_counts, merge::Bincodes &bincodes, float threshold, float alpha, std::string &output_fp) {
+void write_completed_counts(common::countvecmap &kmer_db, std::vector<file::SpeciesCount> &species_counts, merge::Bincodes &bincodes, float threshold, float alpha, std::string &output_fp) {
     // Process current data; we should now have all data up to min_bincode
     // We must account for kmers which have not yet been read in for all species
     FILE *output_fh = fopen(output_fp.c_str(), "a");

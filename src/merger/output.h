@@ -14,8 +14,8 @@
 namespace output {
 
 
-void write_completed_counts(common::countvecmap &kmer_db, std::vector<unsigned int> &species_counts, merge::Bincodes &bincodes, float threshold, float alpha, std::string &output_fp);
-void write_species_counts_header(std::vector<file::CountFile> &fileobjects, std::string &output_fp);
+void write_species_counts_header(std::vector<file::SpeciesCount> &fileobjects, std::string &output_fp);
+void write_completed_counts(common::countvecmap &kmer_db, std::vector<file::SpeciesCount> &species_counts, merge::Bincodes &bincodes, float threshold, float alpha, std::string &output_fp);
 
 
 } // namespace output

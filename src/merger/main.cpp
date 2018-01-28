@@ -1,4 +1,4 @@
-#include <algorithm>
+#include <limits>
 
 
 #include "command_line_options.h"
@@ -24,13 +24,13 @@ int main(int argc, char *argv[]) {
     }
 
     // Get species counts
-    std::vector<unsigned int> species_counts;
+    std::vector<file::SpeciesCount> species_counts;
     for (auto& fileobject : fileobjects) {
         species_counts.push_back(file::get_species_counts(fileobject));
     }
 
     // Write species count header
-    output::write_species_counts_header(fileobjects, options.output_fp);
+    output::write_species_counts_header(species_counts, options.output_fp);
 
     // Merge kmer counts, count probabilites and write out
     common::countvecmap kmer_db;

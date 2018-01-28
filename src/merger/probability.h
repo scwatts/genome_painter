@@ -6,10 +6,13 @@
 #include <vector>
 
 
+#include "file.h"
+
+
 namespace prob {
 
 
-std::vector<float> calculate_probabilities(std::vector<unsigned int> &kmer_counts, std::vector<unsigned int> &species_count, float alpha);
+std::vector<float> calculate_probabilities(std::vector<unsigned int> &kmer_counts, std::vector<file::SpeciesCount> &species_count, float alpha);
 
 
 } // namespace prob

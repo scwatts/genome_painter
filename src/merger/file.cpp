@@ -11,7 +11,7 @@ std::vector<CountFile> init_count_file_objects(std::vector<std::string> &filepat
     for (auto& fp : filepaths) {
         struct stat sb;
         stat(fp.c_str(), &sb);
-        fileobjects.push_back( { fp, sb.st_size, "", 0, std::ifstream(fp) } );
+        fileobjects.push_back( { fp, sb.st_size, std::ifstream(fp) } );
     }
 
     // Sort and return
@@ -59,14 +59,21 @@ bool is_sorted(CountFile &fileobject) {
 }
 
 
-unsigned int get_species_counts(CountFile &fileobject) {
+SpeciesCount get_species_counts(CountFile &fileobject) {
+    // Species count from file header
     std::vector<std::string> line_tokens;
     common::get_line_tokens(fileobject.filehandle, line_tokens);
 
     // Remove leading '#' from first token
     std::string line_token = line_tokens[0];
     line_token.erase(0, 1);
-    return std::stoi(line_token);
+
+    // Species name from filepath
+    std::string fn = fileobject.filepath.substr(fileobject.filepath.find_last_of('/') + 1);
+    fn = fn.substr(0, fn.find(".txt"));
+    fn = fn.substr(0, fn.find(".tsv"));
+
+    return SpeciesCount { fn, std::stoi(line_token) };
 }
 
 
