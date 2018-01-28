@@ -73,7 +73,7 @@ SpeciesCount get_species_counts(CountFile &fileobject) {
     fn = fn.substr(0, fn.find(".txt"));
     fn = fn.substr(0, fn.find(".tsv"));
 
-    return SpeciesCount { fn, std::stoi(line_token) };
+    return SpeciesCount { fn, static_cast<unsigned int>(std::stoi(line_token)) };
 }
 
 
