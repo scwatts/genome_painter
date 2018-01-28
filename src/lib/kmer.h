@@ -15,7 +15,7 @@ namespace kmer {
 typedef void (*bitshifter)(common::ullong &kmer_bincode);
 typedef bool (*encoder)(char nucleotide, common::ullong &nucleotide_bincode);
 
-bool encode_kmer(std::string sequence, size_t i, common::ullong &kmer_bincode, bitshifter bitshift_op, encoder encode_op);
+bool encode_kmer(std::string &sequence, size_t i, common::ullong &kmer_bincode, bitshifter bitshift_op, encoder encode_op);
 void bitshift_forward(common::ullong &kmer_bincode);
 void bitshift_reverse(common::ullong &kmer_bincode);
 bool encode_forward(char nucleotide, common::ullong &nucleotide_bincode);

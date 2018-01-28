@@ -4,7 +4,7 @@
 namespace kmer {
 
 
-bool encode_kmer(std::string sequence, size_t i, common::ullong &kmer_bincode, bitshifter bitshift_op, encoder encode_op) {
+bool encode_kmer(std::string &sequence, size_t i, common::ullong &kmer_bincode, bitshifter bitshift_op, encoder encode_op) {
     common::ullong nucleotide_bincode = 0;
 
     kmer_bincode = 0;
