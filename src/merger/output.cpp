@@ -29,9 +29,6 @@ void write_completed_counts(common::countvecmap &kmer_db, std::vector<file::Spec
 
         if (merge::passes_threshold(probabilities, threshold)) {
             fprintf(output_fh, "%llu", it->first);
-            for (auto & k : it->second) {
-                fprintf(output_fh, "\t%d", k);
-            }
             for (auto & p : probabilities) {
                 fprintf(output_fh, "\t%f", p);
             }
