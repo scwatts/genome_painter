@@ -19,6 +19,9 @@ void print_help(FILE *stdst) {
     fprintf(stdst, "                Kmer database filepath\n");
     fprintf(stdst, "  -o <directorypath>, --output_dir <directorypath>\n");
     fprintf(stdst, "                Output painted data\n");
+    fprintf(stdst, "Options:\n");
+    fprintf(stdst, "  -t <integer>, --threads <integer>\n");
+    fprintf(stdst, "                Number of threads to use [Default: 1]\n");
     fprintf(stdst, "Other:\n");
     fprintf(stdst, "  -h        --help\n");
     fprintf(stdst, "                Display this help and exit\n");
@@ -42,6 +45,7 @@ Options get_arguments(int argc, char **argv) {
             {"genome_fp", required_argument, NULL, 'g'},
             {"kmer_db_fp", required_argument, NULL, 'k'},
             {"output_dir", required_argument, NULL, 'o'},
+            {"threads", required_argument, NULL, 't'},
             {"version", no_argument, NULL, 'v'},
             {"help", no_argument, NULL, 'h'},
             {NULL, 0, 0, 0}
@@ -55,7 +59,7 @@ Options get_arguments(int argc, char **argv) {
         int c;
 
         // Parser
-        c = getopt_long(argc, argv, "hvg:k:o:", long_options, &long_options_index);
+        c = getopt_long(argc, argv, "hvg:k:o:t:", long_options, &long_options_index);
 
         // If no more arguments to parse, break
         if (c == -1) {
@@ -83,6 +87,9 @@ Options get_arguments(int argc, char **argv) {
                 break;
             case 'o':
                 options.output_dir= optarg;
+                break;
+            case 't':
+                options.threads = static_cast<unsigned int>(std::stoi(optarg));
                 break;
             case 'v':
                 print_version(stdout);
@@ -127,6 +134,25 @@ Options get_arguments(int argc, char **argv) {
     if (!common::is_directory(options.output_dir)) {
         print_help(stderr);
         fprintf(stderr, "\n%s: error: output argument %s is not a directory\n", argv[0], options.output_dir.c_str());
+        exit(1);
+    }
+
+    // Check if have a reasonable number of threads
+    if (options.threads < 1) {
+        print_help(stderr);
+        fprintf(stderr,"\n%s: error: must specify at least 1 thread\n", argv[0]);
+        exit(1);
+    }
+
+    // Check we don't attempt to use more threads than we have
+    unsigned int available_threads = std::thread::hardware_concurrency();
+    if (available_threads > 1 && options.threads > available_threads) {
+        print_help(stderr);
+        fprintf(stderr, "\n%s: error: only %d threads are available\n", argv[0], available_threads);
+        exit(1);
+    } else if (options.threads > 64) {
+        print_help(stderr);
+        fprintf(stderr, "\n%s: error: current hardcode limit of 64 threads\n", argv[0]);
         exit(1);
     }
 

@@ -1,3 +1,6 @@
+#include "omp.h"
+
+
 #include "command_line_options.h"
 #include "database.h"
 #include "output.h"
@@ -10,6 +13,9 @@ int main(int argc, char *argv[]) {
     // Get command line arguments
     cmdline::Options options = cmdline::get_arguments(argc, argv);
 
+    // Set number of OpenMP threads
+    omp_set_num_threads(options.threads);
+
     // Read in database
     fprintf(stdout, "Reading in database...\n");
     fflush(stdout);
@@ -17,32 +23,31 @@ int main(int argc, char *argv[]) {
 
     // Paint genomes
     fprintf(stdout, "Painting genomes...\n");
-    for (auto& genome_fp : options.genome_fps) {
+    #pragma omp parallel for schedule(static, 5)
+    for (size_t i = 0; i < options.genome_fps.size(); ++i) {
         // Get in FASTA records
-        fprintf(stdout, "Loading %s\n", genome_fp.c_str());
-        std::vector<genome::FastaRecord> fastas = genome::read_fasta_records(genome_fp);
+        #pragma omp critical
+        fprintf(stdout, "Loading %s\n", options.genome_fps[i].c_str());
+        std::vector<genome::FastaRecord> fastas = genome::read_fasta_records(options.genome_fps[i]);
 
         std::vector<paint::FastaPaint> fasta_painting;
-        fprintf(stdout, "Painting contigs:\n");
-        fflush(stdout);
+        #pragma omp critical
+        fprintf(stdout, "Painting %s\n", options.genome_fps[i].c_str());
         for (auto& fasta : fastas) {
             // Skip sequences less than size of kmer
             if (fasta.sequence.size() < 32) {
                 continue;
             }
 
-            fprintf(stdout, "\t%s...", fasta.name.c_str());
             fasta_painting.push_back(paint::FastaPaint { fasta.name, paint::paint_sequence(fasta, database) });
-            fprintf(stdout, " done\n");
         }
 
         // Write painted genome
-        fprintf(stdout, "Writing results for %s...", genome_fp.c_str());
+        #pragma omp critical
+        fprintf(stdout, "Writing results %s\n", options.genome_fps[i].c_str());
         std::string output_suffix = "_painted.tsv";
-        std::string output_fp = output::construct_output_fp(genome_fp, output_suffix, options.output_dir);
+        std::string output_fp = output::construct_output_fp(options.genome_fps[i], output_suffix, options.output_dir);
         output::write_painted_genome(fasta_painting, database.species_names, output_fp);
-        fprintf(stdout, " done\n");
-        fflush(stdout);
     }
 
     return 0;

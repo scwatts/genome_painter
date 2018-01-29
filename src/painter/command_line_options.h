@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <fstream>
 #include <string>
+#include <thread>
 #include <vector>
 
 
@@ -22,6 +23,7 @@ struct Options {
     std::vector<std::string> genome_fps;
     std::string kmer_db_fp;
     std::string output_dir;
+    unsigned int threads = 1;
 };
 
 void print_help(FILE *stdst);

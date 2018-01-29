@@ -11,16 +11,17 @@ void print_help(FILE *stdst) {
     // Print Usage
     fprintf(stdst, "\n");
     fprintf(stdst, "Usage:\n");
-    fprintf(stdst, "  generate_database --count_fps <filepath> ... --threshold <float> --output_fp <filepath>\n");
+    fprintf(stdst, "  generate_database --count_fps <filepath> ... --output_fp <filepath>\n");
     fprintf(stdst, "\n");
     fprintf(stdst, "  -c <filepath> ..., --count_fps <filepath> ...\n");
     fprintf(stdst, "                Count input filepaths, space separated\n");
+    fprintf(stdst, "  -o <filepath>, --output_fp <filepath>\n");
+    fprintf(stdst, "                Output painted data\n");
+    fprintf(stdst, "Options:\n");
     fprintf(stdst, "  -t <float>, --threshold <float>\n");
     fprintf(stdst, "                Threshold to filter kmers (absolute difference between two highest probabilities) [Default: 0.20]\n");
     fprintf(stdst, "  -a <float>, --alpha <float>\n");
     fprintf(stdst, "                Alpha for shrinkage factor [Default: 1.0]\n");
-    fprintf(stdst, "  -o <filepath>, --output_fp <filepath>\n");
-    fprintf(stdst, "                Output painted data\n");
     fprintf(stdst, "Other:\n");
     fprintf(stdst, "  -h        --help\n");
     fprintf(stdst, "                Display this help and exit\n");
