@@ -20,6 +20,20 @@ bool encode_kmer(std::string &sequence, size_t i, common::ullong &kmer_bincode, 
 }
 
 
+bool rolling_encode_kmer(char nucleotide, common::ullong &kmer_bincode, bitshifter bitshift_op, encoder encode_op) {
+    common::ullong nucleotide_bincode = 0;
+
+    bitshift_op(kmer_bincode);
+    if (encode_op(nucleotide, nucleotide_bincode)) {
+        // Bit mask and then OR new nucleotide
+        kmer_bincode |= nucleotide_bincode;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 void bitshift_forward(common::ullong &kmer_bincode) {
      kmer_bincode <<= 2;
 }
