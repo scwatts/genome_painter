@@ -17,6 +17,9 @@ void print_help(FILE *stdst) {
     fprintf(stdst, "                Input genome filepaths (FASTA format)\n");
     fprintf(stdst, "  -o <filepath>, --output_fp <filepath>\n");
     fprintf(stdst, "                Output kmer counts\n");
+    fprintf(stdst, "Options:\n");
+    fprintf(stdst, "  -t <integer>, --threads <integer>\n");
+    fprintf(stdst, "                Number of threads to use [Default: 1]\n");
     fprintf(stdst, "Other:\n");
     fprintf(stdst, "  -h        --help\n");
     fprintf(stdst, "                Display this help and exit\n");
@@ -39,6 +42,7 @@ Options get_arguments(int argc, char **argv) {
         {
             {"genome_fps", required_argument, NULL, 'g'},
             {"output_fp", required_argument, NULL, 'o'},
+            {"threads", required_argument, NULL, 't'},
             {"version", no_argument, NULL, 'v'},
             {"help", no_argument, NULL, 'h'},
             {NULL, 0, 0, 0}
@@ -52,7 +56,7 @@ Options get_arguments(int argc, char **argv) {
         int c;
 
         // Parser
-        c = getopt_long(argc, argv, "hvg:o:", long_options, &long_options_index);
+        c = getopt_long(argc, argv, "hvg:t:o:", long_options, &long_options_index);
 
         // If no more arguments to parse, break
         if (c == -1) {
@@ -78,6 +82,9 @@ Options get_arguments(int argc, char **argv) {
             case 'o':
                 options.output_fp = optarg;
                 break;
+            case 't':
+                options.threads = static_cast<unsigned int>(std::stoi(optarg));
+                break;
             case 'v':
                 print_version(stdout);
                 exit(0);
@@ -98,6 +105,13 @@ Options get_arguments(int argc, char **argv) {
     if (options.output_fp.empty()) {
         print_help(stderr);
         fprintf(stderr,"\n%s: error: argument -o/--output_fp is required\n", argv[0]);
+        exit(1);
+    }
+
+    // Check if have a reasonable number of threads
+    if (options.threads < 1) {
+        print_help(stderr);
+        fprintf(stderr,"\n%s: error: must specify at least 1 thread\n", argv[0]);
         exit(1);
     }
 

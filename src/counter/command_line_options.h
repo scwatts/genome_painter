@@ -21,6 +21,7 @@ namespace cmdline {
 struct Options {
     std::vector<std::string> genome_fps;
     std::string output_fp;
+    unsigned int threads = 1;
 };
 
 void print_help(FILE *stdst);
