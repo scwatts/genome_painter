@@ -39,8 +39,8 @@ void add_partial_reads(std::vector<file::CountFile> &fileobjects, size_t species
         }
         fprintf(stdout, "\t%s: %lu lines\n", fileobjects[i].filepath.c_str(), lines_read);
 
-        // Record the minimum bincode among files
-        if (bincode < bincodes.min) {
+        // Record the minimum bincode among files (only if we have read in lines)
+        if (bincode < bincodes.min && lines_read) {
             bincodes.min = bincode;
         }
     }
