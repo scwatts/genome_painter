@@ -6,6 +6,7 @@ AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 AC_PROG_CXX
 AC_CHECK_LIB(z, inflate, [], AC_MSG_ERROR(could not find zlib))
 AC_CHECK_LIB(gomp, main, [], AC_MSG_ERROR(could not find the OpenMP))
+AC_CHECK_LIB(sqlite3, main, [], AC_MSG_ERROR(could not find SQLite3))
 
 # Set config header output
 AC_CONFIG_HEADERS([config.h])
