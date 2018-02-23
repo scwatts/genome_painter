@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <vector>
 
 
@@ -15,7 +15,8 @@ namespace common {
 
 
 typedef unsigned long long ullong;
-typedef std::unordered_map<common::ullong,std::vector<unsigned int>> countvecmap;
+// TODO: this still common?
+typedef std::map<common::ullong,std::vector<unsigned int>> countvecmap;
 
 // Filesystem
 bool is_file(std::string &filepath);

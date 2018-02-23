@@ -6,7 +6,6 @@
 #include <vector>
 
 
-#include "database.h"
 #include "lib/genome.h"
 #include "lib/kmer.h"
 

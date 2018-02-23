@@ -2,7 +2,7 @@
 
 
 #include "command_line_options.h"
-#include "database.h"
+#include "input.h"
 #include "output.h"
 #include "paint.h"
 #include "lib/common.h"
@@ -16,10 +16,8 @@ int main(int argc, char *argv[]) {
     // Set number of OpenMP threads
     omp_set_num_threads(options.threads);
 
-    // Read in database
-    fprintf(stdout, "Reading in database...\n");
-    fflush(stdout);
-    db::Database database = db::read_database(options.kmer_db_fp);
+    // Read in database header
+    input::HeaderInfo header_info = input::read_header(options.kmer_db_fp);
 
     // Paint genomes
     fprintf(stdout, "Painting genomes...\n");
