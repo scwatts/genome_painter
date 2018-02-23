@@ -24,4 +24,7 @@ sqlite3_stmt *generate_insert_stmt(int species_count, sqlite3 *dbp) {
 }
 
 
+std::string index_sql("CREATE UNIQUE INDEX bincode_index ON kmer_probabilities (bincode)");
+
+
 } // namespace sql

@@ -79,7 +79,8 @@ int main(int argc, char *argv[]) {
     // TODO: close all file objects
     // TODO: do we need to manually index lookup column?
 
-    // Vacuum SQLite database
+    // Create index and then vacuum SQLite database
+    db::execute(dbp, sql::index_sql.c_str());
     db::execute(dbp, "VACUUM");
 
     // Close database and destory statement object

@@ -15,6 +15,8 @@
 namespace sql {
 
 
+extern std::string index_sql;
+
 std::string generate_create_sql(std::vector<file::SpeciesCount> &species_counts);
 sqlite3_stmt *generate_insert_stmt(int species_count, sqlite3 *dbp);
 
