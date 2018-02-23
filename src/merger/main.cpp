@@ -7,8 +7,10 @@
 #include "command_line_options.h"
 #include "file.h"
 #include "merge.h"
+#include "sql.h"
 #include "output.h"
 #include "lib/common.h"
+#include "lib/database.h"
 
 
 int main(int argc, char *argv[]) {
@@ -33,45 +35,15 @@ int main(int argc, char *argv[]) {
     }
 
     // SQLite database connection
-    sqlite3 *db;
-    if (sqlite3_open(options.output_fp.c_str(), &db) != SQLITE_OK) {
-        fprintf(stderr, "Can't open database %s: %s\n", options.output_fp.c_str(), sqlite3_errmsg(db));
-        sqlite3_close(db);
-        exit(1);
-    }
+    sqlite3 *dbp = db::open(options.output_fp.c_str());
 
-    // Generate SQL statments
-    std::string create_table_sql("CREATE TABLE kmer_probabilities (bincode INTEGER PRIMARY KEY");
-    std::string insert_sql("INSERT INTO kmer_probabilities VALUES (?");
-    for (auto& species_count : species_counts) {
-        char table_str[100]; snprintf(table_str, 100, ", %s REAL", species_count.name.c_str()); create_table_sql.append(table_str);
-        insert_sql.append(", ?");
-    }
-    create_table_sql.append(")"); insert_sql.append(")");
+    // Create tables and write out species counts
+    output::write_species_counts_header(species_counts, dbp);
+    std::string create_table_sql = sql::generate_create_sql(species_counts);
+    db::execute(dbp, create_table_sql.c_str());
 
-    // Create SQL probability table
-    char *errmsg;
-    if (sqlite3_exec(db, create_table_sql.c_str(), NULL, NULL, &errmsg) != SQLITE_OK) {
-        fprintf(stderr, "Can't create table for %s: %s\n", options.output_fp.c_str(), errmsg);
-        sqlite3_close(db);
-        exit(1);
-    }
-
-    // SQLite insert statement template
-    unsigned int buffer_size = 256;
-    char zSQL[buffer_size] = "\0";
-	char *ztail = 0;
-    sqlite3_stmt *stmt;
-    sprintf(zSQL, insert_sql.c_str());
-    if (sqlite3_prepare_v2(db, zSQL, buffer_size, &stmt, (const char **)&ztail) != SQLITE_OK) {
-        fprintf(stderr, "Unable to prepare SQL statement: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
-        exit(1);
-    }
-
-    // Write species count header
-    // TODO: separate table for species counts
-    output::write_species_counts_header(species_counts, db);
+    // Get SQL statement object for inserts
+    sqlite3_stmt *stmt = sql::generate_insert_stmt(species_counts.size(), dbp);
 
     // Merge kmer counts, count probabilites and write out
     common::countvecmap kmer_db;
@@ -96,10 +68,10 @@ int main(int argc, char *argv[]) {
 
         if (all_consumed) {
             bincodes.min = std::numeric_limits<common::ullong>::max();
-            output::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, stmt, db);
+            output::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, stmt, dbp);
             break;
         } else {
-            output::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, stmt, db);
+            output::write_completed_counts(kmer_db, species_counts, bincodes, options.threshold, options.alpha, stmt, dbp);
         }
         fprintf(stdout, "\tIncomplete counts %lu\n", kmer_db.size());
     }
@@ -108,16 +80,11 @@ int main(int argc, char *argv[]) {
     // TODO: do we need to manually index lookup column?
 
     // Vacuum SQLite database
-    if (sqlite3_exec(db, "VACUUM", NULL, NULL, &errmsg) != SQLITE_OK) {
-        fprintf(stderr, "Failed to vacuum: %s\n", errmsg);
-        sqlite3_close(db);
-        exit(1);
-    }
-
+    db::execute(dbp, "VACUUM");
 
     // Close database and destory statement object
     sqlite3_finalize(stmt);
-    sqlite3_close(db);
+    sqlite3_close(dbp);
 
     return 0;
 }

@@ -12,6 +12,7 @@
 #include "file.h"
 #include "merge.h"
 #include "lib/common.h"
+#include "lib/database.h"
 
 
 namespace output {
