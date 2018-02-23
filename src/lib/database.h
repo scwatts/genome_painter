@@ -16,7 +16,7 @@
 namespace db {
 
 
-sqlite3 *open(const char database_fp[]);
+sqlite3 *open_and_configure(const char database_fp[]);
 void execute(sqlite3 *dbp, const char statement[]);
 void start_transaction(sqlite3 *dbp);
 void end_transaction(sqlite3 *dbp);

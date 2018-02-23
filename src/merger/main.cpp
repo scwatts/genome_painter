@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     }
 
     // SQLite database connection
-    sqlite3 *dbp = db::open(options.output_fp.c_str());
+    sqlite3 *dbp = db::open_and_configure(options.output_fp.c_str());
 
     // Create tables and write out species counts
     output::write_species_counts_header(species_counts, dbp);

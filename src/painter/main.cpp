@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     cmdline::Options options = cmdline::get_arguments(argc, argv);
 
     // Open database connection
-    sqlite3 *dbp = db::open(options.kmer_db_fp.c_str());
+    sqlite3 *dbp = db::open_and_configure(options.kmer_db_fp.c_str());
 
     // Get species names
     char *errmsg;

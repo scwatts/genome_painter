@@ -4,13 +4,23 @@
 namespace db {
 
 
-sqlite3 *open(const char database_fp[]) {
+sqlite3 *open_and_configure(const char database_fp[]) {
+    // Open
     sqlite3 *dbp;
     if (sqlite3_open(database_fp, &dbp) != SQLITE_OK) {
         fprintf(stderr, "Can't open database %s: %s\n", database_fp, sqlite3_errmsg(dbp));
         sqlite3_close(dbp);
         exit(1);
     }
+
+    // Configure
+    execute(dbp, "PRAGMA main.page_size=4096");
+    execute(dbp, "PRAGMA main.cache_size=10000");
+    execute(dbp, "PRAGMA main.locking_mode=EXCLUSIVE");
+    execute(dbp, "PRAGMA main.synchronous=OFF");
+    execute(dbp, "PRAGMA main.journal_mode=OFF");
+    execute(dbp, "PRAGMA main.cache_size=5000");
+
     return dbp;
 }
 
