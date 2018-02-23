@@ -49,37 +49,46 @@ sqlite3_stmt *prepare_statement(const char statement[], sqlite3 *dbp) {
 }
 
 
-void bind_int64(sqlite3_stmt *stmt, int index, common::ullong data, sqlite3 *db) {
+void bind_int64(sqlite3_stmt *stmt, int index, common::ullong data, sqlite3 *dbp) {
     if (SQLITE_OK != sqlite3_bind_int64(stmt, index, data)) {
-        fprintf(stderr, "Error binding value in insert: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
+        fprintf(stderr, "Error binding value in insert: %s\n", sqlite3_errmsg(dbp));
+        sqlite3_close(dbp);
         exit(1);
     }
 }
 
 
 // TODO: can we template this? relation must be made to correct sqlite bind function...
-void bind_double(sqlite3_stmt *stmt, int index, double data, sqlite3 *db) {
+void bind_double(sqlite3_stmt *stmt, int index, double data, sqlite3 *dbp) {
     if (SQLITE_OK != sqlite3_bind_double(stmt, index, data)) {
-        fprintf(stderr, "Error binding value in insert: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
+        fprintf(stderr, "Error binding value in insert: %s\n", sqlite3_errmsg(dbp));
+        sqlite3_close(dbp);
         exit(1);
     }
 }
 
 
-void step(sqlite3_stmt *stmt, sqlite3 *db) {
+void step(sqlite3_stmt *stmt, sqlite3 *dbp) {
     if (SQLITE_DONE != sqlite3_step(stmt)) {
-        fprintf(stderr, "Error evaluating statement: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
+        fprintf(stderr, "Error evaluating statement: %s\n", sqlite3_errmsg(dbp));
+        sqlite3_close(dbp);
         exit(1);
     }
 }
 
 
-int vector_fill(void *vector_void, int number_fields, char *fields[], char *column_names[]) {
-    std::vector<float> *vector = static_cast<std::vector<float> *> vector_void;
-    vector->emplace_back(fields, fields + number_fields);
+int vector_fill_probabilities(void *vector_void, int number_fields, char *fields[], char *column_names[]) {
+    std::vector<float> *vector = static_cast<std::vector<float> *>(vector_void);
+    for(int i = 1; i < number_fields; i++) {
+        vector->push_back(std::stof(fields[i]));
+    }
+    return 0;
+}
+
+
+int vector_fill_species(void *vector_void, int number_fields, char *fields[], char *column_names[]) {
+    std::vector<std::string> *vector = static_cast<std::vector<std::string> *>(vector_void);
+    vector->push_back(std::string(fields[0]));
     return 0;
 }
 

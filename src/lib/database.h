@@ -24,6 +24,8 @@ sqlite3_stmt *prepare_statement(const char statement[], sqlite3 *dbp);
 void bind_int64(sqlite3_stmt *stmt, int index, common::ullong data, sqlite3 *db);
 void bind_double(sqlite3_stmt *stmt, int index, double data, sqlite3 *db);
 void step(sqlite3_stmt *stmt, sqlite3 *db);
+int vector_fill_probabilities(void *vector_void, int number_fields, char *fields[], char *column_names[]);
+int vector_fill_species(void *vector_void, int number_fields, char *fields[], char *column_names[]);
 
 
 } // namesspace db
