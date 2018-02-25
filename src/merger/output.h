@@ -35,6 +35,7 @@ struct IndexEntry {
 };
 
 struct Index {
+    unsigned int i = 0;
     long int last_position = 0;
     long int record_size;
     std::vector<IndexEntry> entries;

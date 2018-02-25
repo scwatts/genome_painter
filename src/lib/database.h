@@ -7,6 +7,7 @@
 #define SPECIES_COUNT_FIELD_SIZE sizeof(unsigned int)
 #define BINCODE_FIELD_SIZE sizeof(common::ullong)
 #define PROB_FIELD_SIZE sizeof(float)
+#define INDEX_DIV 1000
 
 
 #endif

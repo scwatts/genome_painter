@@ -54,10 +54,13 @@ void write_completed_counts(KmerData &data, Parameters &parameters, Index &indic
                 fwrite(&p, PROB_FIELD_SIZE, 1, output_fh);
             }
 
-            // Calculate index
-            IndexEntry index_entry = { it->first, indices.last_position };
-            indices.entries.push_back(index_entry);
-            indices.last_position += indices.record_size;
+            // Calculate index if at checkpoint
+            if ((indices.i % INDEX_DIV) == 0) {
+                indices.i++;
+                IndexEntry index_entry = { it->first, indices.last_position };
+                indices.entries.push_back(index_entry);
+                indices.last_position += indices.record_size;
+            }
         }
 
         // Remove from map once done
