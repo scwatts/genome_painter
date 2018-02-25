@@ -34,11 +34,9 @@ int main(int argc, char *argv[]) {
     long int header_size = output::write_species_counts_header(species_counts, options.output_fp);
 
     // Set up data structures for clarity
-    // TODO: fixme
-    long int record_size = BINCODE_FIELD_SIZE + (PROB_FIELD_SIZE * species_counts.size());
-    output::KmerData kmer_data; kmer_data.species_counts = &species_counts;
+    output::KmerData kmer_data(&species_counts);
     output::Parameters parameters = { options.threshold, options.alpha, &options.output_fp };
-    output::Index indices; indices.last_position = header_size; indices.record_size = record_size;
+    output::Index indices(header_size, (PROB_FIELD_SIZE * species_counts.size()) + BINCODE_FIELD_SIZE);
 
     // Merge kmer counts, count probabilites and write out
     unsigned int iteration = 0;

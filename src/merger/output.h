@@ -19,6 +19,8 @@ struct KmerData {
     common::countvecmap kmer_db;
     std::vector<file::SpeciesCount> *species_counts;
     merge::Bincodes bincodes;
+
+    KmerData(std::vector<file::SpeciesCount> *_species_counts): species_counts(_species_counts) {}
 };
 
 struct Parameters {
@@ -36,6 +38,9 @@ struct Index {
     long int last_position = 0;
     long int record_size;
     std::vector<IndexEntry> entries;
+
+    Index(long int _last_position, long int _record_size): last_position(_last_position),
+                                                           record_size(_record_size) {}
 };
 
 void write_magic_bits(std::string &output_fp);
