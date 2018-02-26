@@ -79,6 +79,9 @@ void write_indices(Index &indices, std::string output_fp) {
         fwrite(&index.position, sizeof(long int), 1, output_fh);
     }
     fclose(output_fh);
+
+    // Clear indices written out
+    indices.entries.clear();
 }
 
 } // namespace output
