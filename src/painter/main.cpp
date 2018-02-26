@@ -2,10 +2,10 @@
 
 
 #include "command_line_options.h"
-#include "input.h"
 #include "output.h"
 #include "paint.h"
 #include "lib/common.h"
+#include "lib/database.h"
 #include "lib/genome.h"
 
 
@@ -16,8 +16,10 @@ int main(int argc, char *argv[]) {
     // Set number of OpenMP threads
     omp_set_num_threads(options.threads);
 
-    // Read in database header
-    input::HeaderInfo header_info = input::read_header(options.kmer_db_fp);
+    // Read in database header and index
+    db::Database database(options.kmer_db_fp);
+    db::read_header(database);
+    db::read_index(database);
 
     // Paint genomes
     fprintf(stdout, "Painting genomes...\n");
@@ -42,10 +44,10 @@ int main(int argc, char *argv[]) {
 
         // Write painted genome
         #pragma omp critical
-        fprintf(stdout, "Writing results %s\n", options.genome_fps[i].c_str());
+        fprintf(stdout, "Writing results for %s\n", options.genome_fps[i].c_str());
         std::string output_suffix = "_painted.tsv";
         std::string output_fp = output::construct_output_fp(options.genome_fps[i], output_suffix, options.output_dir);
-        output::write_painted_genome(fasta_painting, database.species_names, output_fp);
+        output::write_painted_genome(fasta_painting, database.header.species_counts, output_fp);
     }
 
     return 0;
