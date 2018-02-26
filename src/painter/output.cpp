@@ -24,12 +24,12 @@ std::string construct_output_fp(std::string &genome_fp, std::string &suffix, std
 }
 
 
-void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::vector<std::string> species_names, std::string &output_fp) {
+void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::vector<file::SpeciesCount> species_counts, std::string &output_fp) {
     FILE *output_fh = fopen(output_fp.c_str(), "w");
 
     // Header
-    for (const auto& species_name : species_names) {
-        fprintf(output_fh, "#%s\n", species_name.c_str());
+    for (const auto& species_count: species_counts) {
+        fprintf(output_fh, "#%s\n", species_count.name.c_str());
     }
 
     // Data

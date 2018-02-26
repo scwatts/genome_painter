@@ -3,30 +3,24 @@
 
 namespace paint {
 
-
 std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database &database) {
-    std::vector<PaintBucket> paint(fasta.sequence.size(), { {}, 0 });
-
     // Forward and reverse kmers
+    std::vector<PaintBucket> paint(fasta.sequence.size(), { {}, 0 });
     for (size_t i = 0; i < fasta.sequence.size(); i++) {
-        // Attempt to encode (currently we're unable to encode nucleotides other than atgc)
-        common::ullong f_bincode, r_bincode;
+        // Encode kmer and get probabilities
         bool f_status, r_status;
-        f_status = kmer::encode_kmer(fasta.sequence, i, f_bincode, kmer::bitshift_forward, kmer::encode_forward);
-        r_status = kmer::encode_kmer(fasta.sequence, i, r_bincode, kmer::bitshift_reverse, kmer::encode_reverse);
-
-        // Check for presence in database
-        if ( !(f_status && database.probability_map.find(f_bincode) != database.probability_map.end()) ) { f_status = false; }
-        if ( !(r_status && database.probability_map.find(r_bincode) != database.probability_map.end()) ) { r_status = false; }
+        std::vector<float> f_probabilities, r_probabilities;
+        f_status = get_probabilities(fasta.sequence, i, kmer::bitshift_forward, kmer::encode_forward, f_probabilities, database);
+        r_status = get_probabilities(fasta.sequence, i, kmer::bitshift_reverse, kmer::encode_reverse, r_probabilities, database);
 
         // If forward and reverse kmers are good, select kmer with best probabilities
         PaintBucket kmer_probabilities;
         if (f_status && r_status) {
-            kmer_probabilities = get_best_probabilities(f_bincode, r_bincode, database);
+            kmer_probabilities = get_best_probabilities(f_probabilities, r_probabilities);
         } else if (f_status) {
-            kmer_probabilities.set_probabilities(database.probability_map[f_bincode]);
+            kmer_probabilities.set_probabilities(f_probabilities);
         } else if (r_status) {
-            kmer_probabilities.set_probabilities(database.probability_map[r_bincode]);
+            kmer_probabilities.set_probabilities(r_probabilities);
         } else {
             continue;
         }
@@ -38,10 +32,34 @@ std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database
 }
 
 
-PaintBucket get_best_probabilities(common::ullong f_bincode, common::ullong r_bincode, db::Database &database) {
+bool get_probabilities(std::string &sequence, size_t i, kmer::bitshifter bitshift_op,
+                        kmer::encoder encode_op, std::vector<float> &probabilities, db::Database &database) {
+    // Encode
+    common::ullong bincode;
+    if (! kmer::encode_kmer(sequence, i, bincode, bitshift_op, encode_op)) {
+        return false;
+    }
+
+    // Get probabilities
+    if (database.cache.find(bincode) != database.cache.end()) {
+        // Cache hit
+        probabilities = database.cache[bincode];
+        return true;
+    } else if (database.index.find(bincode) != database.index.end()) {
+        // Cache miss; read in data, place into cache
+        probabilities = db::read_bincode_probabilities(bincode, database);
+        database.cache[bincode] = probabilities;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+PaintBucket get_best_probabilities(std::vector<float> f_probabilities, std::vector<float> r_probabilities) {
     PaintBucket forward, reverse;
-    forward.set_probabilities(database.probability_map[f_bincode]);
-    reverse.set_probabilities(database.probability_map[r_bincode]);
+    forward.set_probabilities(f_probabilities);
+    reverse.set_probabilities(r_probabilities);
 
     if (forward.max_probability > reverse.max_probability) {
         return forward;
