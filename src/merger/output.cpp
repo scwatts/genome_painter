@@ -11,7 +11,7 @@ void write_magic_bits(std::string &output_fp) {
 }
 
 
-long int write_species_counts_header(std::vector<file::SpeciesCount> &species_counts, std::string &output_fp) {
+void write_species_counts_header(std::vector<file::SpeciesCount> &species_counts, std::string &output_fp) {
     FILE *output_fh = fopen(output_fp.c_str(), "ab");
     // Size of header
     unsigned int header_size = (SPECIES_NAME_FIELD_SIZE + SPECIES_COUNT_FIELD_SIZE) * species_counts.size();
@@ -27,13 +27,11 @@ long int write_species_counts_header(std::vector<file::SpeciesCount> &species_co
         fwrite(species_count.name.c_str(), SPECIES_NAME_FIELD_SIZE, 1, output_fh);
         fwrite(&species_count.count, SPECIES_COUNT_FIELD_SIZE, 1, output_fh);
     }
-    long int position = ftell(output_fh);
     fclose(output_fh);
-    return position;
 }
 
 
-void write_completed_counts(KmerData &data, Parameters &parameters, Index &indices) {
+void write_completed_counts(KmerData &data, Parameters &parameters) {
     // Process current data; we should now have all data up to min_bincode
     // We must account for kmers which have not yet been read in for all species
     FILE *output_fh = fopen(parameters.output_fp->c_str(), "ab");
@@ -53,11 +51,6 @@ void write_completed_counts(KmerData &data, Parameters &parameters, Index &indic
             for (auto & p : probabilities) {
                 fwrite(&p, PROB_FIELD_SIZE, 1, output_fh);
             }
-
-            // Calculate index
-            IndexEntry index_entry = { it->first, indices.last_position };
-            indices.entries.push_back(index_entry);
-            indices.last_position += indices.record_size;
         }
 
         // Remove from map once done
@@ -67,15 +60,5 @@ void write_completed_counts(KmerData &data, Parameters &parameters, Index &indic
     fclose(output_fh);
 }
 
-
-void write_indices(Index &indices, std::string output_fp) {
-    output_fp.append(".idx");
-    FILE *output_fh = fopen(output_fp.c_str(), "ab");
-    for (auto& index : indices.entries) {
-        fwrite(&index.bincode, sizeof(common::ullong), 1, output_fh);
-        fwrite(&index.position, sizeof(long int), 1, output_fh);
-    }
-    fclose(output_fh);
-}
 
 } // namespace output

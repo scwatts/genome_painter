@@ -31,14 +31,11 @@ int main(int argc, char *argv[]) {
 
     // Write magic bits and species count header, getting inclusive header size
     output::write_magic_bits(options.output_fp);
-    long int header_size = output::write_species_counts_header(species_counts, options.output_fp);
+    output::write_species_counts_header(species_counts, options.output_fp);
 
     // Set up data structures for clarity
-    // TODO: fixme
-    long int record_size = BINCODE_FIELD_SIZE + (PROB_FIELD_SIZE * species_counts.size());
-    output::KmerData kmer_data; kmer_data.species_counts = &species_counts;
+    output::KmerData kmer_data(&species_counts);
     output::Parameters parameters = { options.threshold, options.alpha, &options.output_fp };
-    output::Index indices; indices.last_position = header_size; indices.record_size = record_size;
 
     // Merge kmer counts, count probabilites and write out
     unsigned int iteration = 0;
@@ -61,12 +58,10 @@ int main(int argc, char *argv[]) {
 
         if (all_consumed) {
             kmer_data.bincodes.min = std::numeric_limits<common::ullong>::max();
-            output::write_completed_counts(kmer_data, parameters, indices);
-            output::write_indices(indices, options.output_fp);
+            output::write_completed_counts(kmer_data, parameters);
             break;
         } else {
-            output::write_completed_counts(kmer_data, parameters, indices);
-            output::write_indices(indices, options.output_fp);
+            output::write_completed_counts(kmer_data, parameters);
         }
         fprintf(stdout, "\tIncomplete counts %lu\n", kmer_data.kmer_db.size());
     }
