@@ -11,7 +11,7 @@ void print_help(FILE *stdst) {
     // Print Usage
     fprintf(stdst, "\n");
     fprintf(stdst, "Usage:\n");
-    fprintf(stdst, "  genome_painter --genome_fp <filepath> ... --kmer_db_fp <filepath> --output_dir <directorypath>\n");
+    fprintf(stdst, "  paint_genome --genome_fp <filepath> ... --kmer_db_fp <filepath> --output_dir <directorypath>\n");
     fprintf(stdst, "\n");
     fprintf(stdst, "  -g <filepath> ..., --genome_fps <filepath> ...\n");
     fprintf(stdst, "                Genome input filepaths, space separated (FASTA format)\n");
