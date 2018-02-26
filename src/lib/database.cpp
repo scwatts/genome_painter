@@ -46,6 +46,7 @@ void read_index(Database &database) {
         fread(&position, sizeof(long int), 1, index_fh);
         database.index[bincode] = position;
     }
+    fclose(index_fh);
 }
 
 
@@ -62,7 +63,7 @@ std::vector<float> read_bincode_probabilities(common::ullong bincode, Database &
         fread(&probability, sizeof(float), 1, db_fh);
         probabilities.push_back(probability);
     }
-
+    fclose(db_fh);
     return probabilities;
 }
 
