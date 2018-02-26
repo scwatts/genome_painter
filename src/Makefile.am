@@ -1,6 +1,11 @@
 # Compiler flags
 AM_CXXFLAGS=-std=c++11 -Wall -Wextra -fopenmp -I$(top_srcdir)/src
 
+# Static compile option
+if STATIC_COMPILE
+AM_CXXFLAGS+=-static
+endif
+
 # Declaring files
 bin_PROGRAMS = count_kmers generate_database paint_genome
 count_kmers_SOURCES = counter/main.cpp counter/command_line_options.cpp counter/output.cpp counter/count.cpp lib/common.cpp lib/genome.cpp lib/kmer.cpp
