@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 
     // Paint genomes
     fprintf(stdout, "Painting genomes...\n");
-    #pragma omp parallel for schedule(static, 5)
+    #pragma omp parallel for schedule(static, 1)
     for (size_t i = 0; i < options.genome_fps.size(); ++i) {
         // Get in FASTA records
         #pragma omp critical
