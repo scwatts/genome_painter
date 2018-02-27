@@ -38,7 +38,7 @@ void read_header(Database &database) {
 void read_database(Database &database) {
     // Open file and seek to main data block
     FILE *db_fh= fopen(database.fp.c_str(), "rb");
-    fseek(db_fh, database.header.offset, SEEK_END);
+    fseek(db_fh, database.header.offset, SEEK_SET);
 
     // Read in data
     while(!feof(db_fh)) {
