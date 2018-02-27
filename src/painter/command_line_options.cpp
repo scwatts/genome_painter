@@ -11,7 +11,7 @@ void print_help(FILE *stdst) {
     // Print Usage
     fprintf(stdst, "\n");
     fprintf(stdst, "Usage:\n");
-    fprintf(stdst, "  paint_genome --genome_fp <filepath> ... --kmer_db_fp <filepath> --output_dir <directorypath>\n");
+    fprintf(stdst, "  paint_genome --genome_fps <filepath> ... --kmer_db_fp <filepath> --output_dir <directorypath>\n");
     fprintf(stdst, "\n");
     fprintf(stdst, "  -g <filepath> ..., --genome_fps <filepath> ...\n");
     fprintf(stdst, "                Genome input filepaths, space separated (FASTA format)\n");
@@ -42,7 +42,7 @@ Options get_arguments(int argc, char **argv) {
     Options options;
     struct option long_options[] =
         {
-            {"genome_fp", required_argument, NULL, 'g'},
+            {"genome_fps", required_argument, NULL, 'g'},
             {"kmer_db_fp", required_argument, NULL, 'k'},
             {"output_dir", required_argument, NULL, 'o'},
             {"threads", required_argument, NULL, 't'},
