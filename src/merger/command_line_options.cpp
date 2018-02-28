@@ -43,7 +43,7 @@ Options get_arguments(int argc, char **argv) {
     struct option long_options[] =
         {
             {"count_fps", required_argument, NULL, 'c'},
-            {"threshold", required_argument, NULL, 'r'},
+            {"threshold", required_argument, NULL, 't'},
             {"alpha", required_argument, NULL, 'a'},
             {"output_fp", required_argument, NULL, 'o'},
             {"version", no_argument, NULL, 'v'},
