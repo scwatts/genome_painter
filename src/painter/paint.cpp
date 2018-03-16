@@ -4,6 +4,7 @@
 namespace paint {
 
 std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database &database) {
+    // TODO: lexicographical string comparison of kmer to become strand neutral
     // Forward and reverse kmers
     std::vector<PaintBucket> paint(fasta.sequence.size(), { {}, 0 });
     for (size_t i = 0; i < fasta.sequence.size(); i++) {

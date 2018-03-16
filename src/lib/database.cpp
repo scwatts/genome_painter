@@ -32,6 +32,7 @@ void read_header(Database &database) {
 
     // Set data offset
     database.header.offset = ftell(db_fh);
+    fclose(db_fh);
 }
 
 

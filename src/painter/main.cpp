@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     omp_set_num_threads(options.threads);
 
     // Read in database
-    fprintf(stdout, "Load database...\n");
+    fprintf(stdout, "Loading database...\n");
     db::Database database(options.kmer_db_fp);
     db::read_header(database);
     db::read_database(database);
