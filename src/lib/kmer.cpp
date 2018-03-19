@@ -42,6 +42,7 @@ bool encode_kmer(std::string &sequence, size_t i, common::ullong &kmer_bincode) 
     }
 
     // Encode lexicographically smallest kmer
+    // TODO: how much more efficient is it to continually roll the kmer?
     common::ullong nucleotide_bincode = 0;
     kmer_bincode = 0;
     for (unsigned int j = 0; j < KMER_SIZE; j++, kmer_iter++) {
