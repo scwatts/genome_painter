@@ -4,13 +4,49 @@
 namespace kmer {
 
 
-bool encode_kmer(std::string &sequence, size_t i, common::ullong &kmer_bincode, bitshifter bitshift_op, encoder encode_op) {
-    common::ullong nucleotide_bincode = 0;
+bool encode_kmer(std::string &sequence, size_t i, common::ullong &kmer_bincode) {
+    // Make lexicographical comparison with partially reverse complemented kmer
+    // TODO: can we improve efficiency by encoding both strands during lex cmp?
+    std::string::iterator iter = sequence.begin() + i;
+    std::string::reverse_iterator riter = sequence.rend() - (i + KMER_SIZE);
+    std::string kmer_rc;
+    kmer_rc.reserve(KMER_SIZE);
 
+    char complement_nucleotide;
+    std::string::iterator kmer_iter = iter;
+    for (unsigned long j = 0; j < KMER_SIZE; j++, iter++, riter++) {
+        // Complement (only accepting ATGC)
+        if (complement(*riter, complement_nucleotide)) {
+            kmer_rc.push_back(complement_nucleotide);
+        } else {
+            return false;
+        }
+
+        // Lex cmp
+        if (*iter > complement_nucleotide) {
+            // Finish reverse complementing kmer_rc and set iterator
+            // TODO: this is getting a little messy, clean up?
+            for (riter++; riter != sequence.rend()-i; riter++) {
+                if (complement(*riter, complement_nucleotide)) {
+                    kmer_rc.push_back(complement_nucleotide);
+                } else {
+                    return false;
+                }
+            }
+            kmer_iter = kmer_rc.begin();
+            break;
+        } else if (*iter < complement_nucleotide) {
+            // Keep kmer_iter as default
+            break;
+        }
+    }
+
+    // Encode lexicographically smallest kmer
+    common::ullong nucleotide_bincode = 0;
     kmer_bincode = 0;
-    for (unsigned long j = i; j < i+32; j++) {
-        bitshift_op(kmer_bincode);
-        if (encode_op(sequence[j], nucleotide_bincode)) {
+    for (unsigned int j = 0; j < KMER_SIZE; j++, kmer_iter++) {
+        kmer_bincode <<= 2;
+        if (encode_nucleotide(*kmer_iter, nucleotide_bincode)) {
             kmer_bincode |= nucleotide_bincode;
         } else {
             return false;
@@ -20,17 +56,28 @@ bool encode_kmer(std::string &sequence, size_t i, common::ullong &kmer_bincode, 
 }
 
 
-void bitshift_forward(common::ullong &kmer_bincode) {
-     kmer_bincode <<= 2;
+bool complement(char nucleotide, char &complement_nucleotide) {
+    switch(nucleotide) {
+        case 'A':
+            complement_nucleotide = 'T';
+            break;
+        case 'T':
+            complement_nucleotide = 'A';
+            break;
+        case 'G':
+            complement_nucleotide = 'C';
+            break;
+        case 'C':
+            complement_nucleotide = 'G';
+            break;
+        default:
+            return false;
+    }
+    return true;
 }
 
 
-void bitshift_reverse(common::ullong &kmer_bincode) {
-     kmer_bincode >>= 2;
-}
-
-
-bool encode_forward(char nucleotide, common::ullong &nucleotide_bincode) {
+bool encode_nucleotide(char nucleotide, common::ullong &nucleotide_bincode) {
     switch (nucleotide) {
         case 'A':
             nucleotide_bincode = 0;
@@ -43,27 +90,6 @@ bool encode_forward(char nucleotide, common::ullong &nucleotide_bincode) {
             break;
         case 'C':
             nucleotide_bincode = 3;
-            break;
-        default:
-            return false;
-    }
-    return true;
-}
-
-
-bool encode_reverse(char nucleotide, common::ullong &nucleotide_bincode) {
-    switch (nucleotide) {
-        case 'A':
-            nucleotide_bincode = (common::ullong)1 << 62;
-            break;
-        case 'T':
-            nucleotide_bincode = (common::ullong)0 << 62;
-            break;
-        case 'G':
-            nucleotide_bincode = (common::ullong)3 << 62;
-            break;
-        case 'C':
-            nucleotide_bincode = (common::ullong)2 << 62;
             break;
         default:
             return false;

@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         fprintf(stdout, "Painting %s\n", options.genome_fps[i].c_str());
         for (auto& fasta : fastas) {
             // Skip sequences less than size of kmer
-            if (fasta.sequence.size() < 32) {
+            if (fasta.sequence.size() < KMER_SIZE) {
                 continue;
             }
 

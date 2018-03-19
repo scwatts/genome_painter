@@ -16,7 +16,7 @@ void print_help(FILE *stdst) {
     fprintf(stdst, "  -c <filepath> ..., --count_fps <filepath> ...\n");
     fprintf(stdst, "                Count input filepaths, space separated\n");
     fprintf(stdst, "  -o <filepath>, --output_fp <filepath>\n");
-    fprintf(stdst, "                Output painted data\n");
+    fprintf(stdst, "                Output database filepath\n");
     fprintf(stdst, "Options:\n");
     fprintf(stdst, "  -t <float>, --threshold <float>\n");
     fprintf(stdst, "                Threshold to filter kmers (absolute difference between two highest probabilities) [Default: 0.20]\n");

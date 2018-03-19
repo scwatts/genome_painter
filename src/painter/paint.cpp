@@ -4,71 +4,42 @@
 namespace paint {
 
 std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database &database) {
-    // TODO: lexicographical string comparison of kmer to become strand neutral
-    // Forward and reverse kmers
-    std::vector<PaintBucket> paint(fasta.sequence.size(), { {}, 0 });
+    std::vector<PaintBucket> paint(fasta.sequence.size(), PaintBucket(database.header.species_num));
     for (size_t i = 0; i < fasta.sequence.size(); i++) {
-        // Encode kmer and get probabilities
-        bool f_status, r_status;
-        std::vector<float> f_probabilities, r_probabilities;
-        f_status = get_probabilities(fasta.sequence, i, kmer::bitshift_forward, kmer::encode_forward, f_probabilities, database);
-        r_status = get_probabilities(fasta.sequence, i, kmer::bitshift_reverse, kmer::encode_reverse, r_probabilities, database);
-
-        // If forward and reverse kmers are good, select kmer with best probabilities
-        PaintBucket kmer_probabilities;
-        if (f_status && r_status) {
-            kmer_probabilities = get_best_probabilities(f_probabilities, r_probabilities);
-        } else if (f_status) {
-            kmer_probabilities.set_probabilities(f_probabilities);
-        } else if (r_status) {
-            kmer_probabilities.set_probabilities(r_probabilities);
-        } else {
-            continue;
+        std::vector<float> probabilities;
+        if(get_probabilities(fasta.sequence, i, probabilities, database)) {
+            // Add current kmer_probabilities if they're higher than what is currently present
+            PaintBucket kmer_probabilities(probabilities);
+            compare_paint(paint, kmer_probabilities, i);
         }
-
-        // Add current kmer_probabilities is they're higher than what is currently present
-        compare_paint(paint, kmer_probabilities, i);
     }
     return paint;
 }
 
 
-bool get_probabilities(std::string &sequence, size_t i, kmer::bitshifter bitshift_op,
-                        kmer::encoder encode_op, std::vector<float> &probabilities, db::Database &database) {
+bool get_probabilities(std::string &sequence, size_t i, std::vector<float> &probabilities, db::Database &database) {
     // Encode
     common::ullong bincode;
-    if (! kmer::encode_kmer(sequence, i, bincode, bitshift_op, encode_op)) {
+    if (! kmer::encode_kmer(sequence, i, bincode)) {
         return false;
     }
 
     // Get probabilities
     if (database.probabilities.find(bincode) != database.probabilities.end()) {
         probabilities = database.probabilities[bincode];
-    }
-
-    return (! probabilities.empty());
-}
-
-
-PaintBucket get_best_probabilities(std::vector<float> f_probabilities, std::vector<float> r_probabilities) {
-    PaintBucket forward, reverse;
-    forward.set_probabilities(f_probabilities);
-    reverse.set_probabilities(r_probabilities);
-
-    if (forward.max_probability > reverse.max_probability) {
-        return forward;
+        return true;
     } else {
-        return reverse;
+        return false;
     }
 }
 
 
 void compare_paint(std::vector<PaintBucket> &paint, PaintBucket &bucket, size_t i) {
     size_t end_idx;
-    if (i+32 > paint.size()) {
+    if (i+KMER_SIZE > paint.size()) {
         end_idx = paint.size();
     } else {
-        end_idx = i + 32;
+        end_idx = i + KMER_SIZE;
     }
 
     // TODO: to save memory we could use a reference and one of each bucket on the stack
@@ -77,11 +48,6 @@ void compare_paint(std::vector<PaintBucket> &paint, PaintBucket &bucket, size_t 
             paint[i] = bucket;
         }
     }
-}
-
-void PaintBucket::set_probabilities(std::vector<float> &probabilities) {
-    PaintBucket::probabilities = probabilities;
-    PaintBucket::max_probability = *std::max_element(probabilities.begin(), probabilities.end());
 }
 
 

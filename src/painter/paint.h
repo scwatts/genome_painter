@@ -18,7 +18,11 @@ struct PaintBucket {
     std::vector<float> probabilities;
     float max_probability;
 
-    void set_probabilities(std::vector<float> &probablities);
+    PaintBucket(std::vector<float> &_probablities) :
+        probabilities(std::move(_probablities)),
+        max_probability(*std::max_element(probabilities.begin(), probabilities.end())) { }
+
+    PaintBucket(size_t _probability_size) { probabilities.reserve(_probability_size); }
 };
 
 struct FastaPaint {
@@ -27,8 +31,7 @@ struct FastaPaint {
 };
 
 std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database &database);
-bool get_probabilities(std::string &sequence, size_t i, kmer::bitshifter bitshift_op, kmer::encoder encode_op, std::vector<float> &probabilities, db::Database &database);
-PaintBucket get_best_probabilities(std::vector<float> f_probabilities, std::vector<float> r_probabilities);
+bool get_probabilities(std::string &sequence, size_t i, std::vector<float> &probabilities, db::Database &database);
 void compare_paint(std::vector<PaintBucket> &paint, PaintBucket &bucket, size_t i);
 
 
