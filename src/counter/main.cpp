@@ -24,6 +24,9 @@ int main(int argc, char *argv[]) {
         // Collect kmers in the genome
         std::set<common::ullong> sample_kmers;
         for (auto& fasta : fastas) {
+            if (fasta.sequence.size() < KMER_SIZE) {
+                continue;
+            }
             count::collect_kmers(fasta.sequence, sample_kmers);
         }
 

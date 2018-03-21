@@ -5,7 +5,7 @@ namespace paint {
 
 std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database &database) {
     std::vector<PaintBucket> paint(fasta.sequence.size(), PaintBucket(database.header.species_num));
-    for (size_t i = 0; i < fasta.sequence.size()-KMER_SIZE; i++) {
+    for (size_t i = 0; i <= fasta.sequence.size()-KMER_SIZE; i++) {
         std::vector<float> probabilities;
         if(get_probabilities(fasta.sequence, i, probabilities, database)) {
             // Add current kmer_probabilities if they're higher than what is currently present
