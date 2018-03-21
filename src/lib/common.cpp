@@ -24,6 +24,16 @@ bool is_directory(std::string &filepath) {
     }
 }
 
+bool is_writeable(std::string &filepath) {
+    FILE *fh = fopen(filepath.c_str(), "w+");
+    if (fh == NULL) {
+        return false;
+    } else {
+        fclose(fh);
+        return true;
+    }
+}
+
 
 // Input
 int get_line_tokens(std::ifstream &fh, std::vector<std::string> &line_tokens) {

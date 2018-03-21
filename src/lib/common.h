@@ -21,6 +21,7 @@ typedef std::map<common::ullong,std::vector<unsigned int>> countvecmap;
 // Filesystem
 bool is_file(std::string &filepath);
 bool is_directory(std::string &filepath);
+bool is_writeable(std::string &filepath);
 
 // Input
 int get_line_tokens(std::ifstream &fh, std::vector<std::string> &line_tokens);

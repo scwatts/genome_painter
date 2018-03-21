@@ -108,6 +108,13 @@ Options get_arguments(int argc, char **argv) {
         exit(1);
     }
 
+    // Ensure we can write to output file
+    if (! common::is_writeable(options.output_fp)) {
+        print_help(stderr);
+        fprintf(stderr,"\n%s: error: cannot write to output file '%s'\n", argv[0], options.output_fp.c_str());
+        exit(1);
+    }
+
     // Check if have a reasonable number of threads
     if (options.threads < 1) {
         print_help(stderr);

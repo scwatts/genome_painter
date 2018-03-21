@@ -122,6 +122,13 @@ Options get_arguments(int argc, char **argv) {
         }
     }
 
+    // Ensure we can write to output file
+    if (! common::is_writeable(options.output_fp)) {
+        print_help(stderr);
+        fprintf(stderr,"\n%s: error: cannot write to output file '%s'\n", argv[0], options.output_fp.c_str());
+        exit(1);
+    }
+
     // Check threshold is between 0.0 and 1.0
     if (options.threshold < 0.0 || options.threshold > 1.0) {
         print_help(stderr);
