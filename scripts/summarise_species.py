@@ -38,7 +38,8 @@ def get_arguments():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('input', type=str,
-                        help='First PHYLIP distance matrix (better at shorter distances)')
+                        help='A tsv file from paint_genome or a directory of tsv files from '
+                             'paint_genome')
     parser.add_argument('--threshold', type=float, required=False, default=0.9,
                         help='Minimum probability threshold - positions with a max probability '
                              'lower than this will be ignored')
@@ -81,6 +82,7 @@ def print_output_header(top_num):
 
 def summarise_species(args):
     result_file, threshold, top_num = args
+    assembly_name = os.path.basename(result_file).replace('_painted.tsv', '')
     species_names = get_species_names(result_file)
     species_tallies = {x: 0 for x in species_names}
     contig_lengths = {}
@@ -100,14 +102,14 @@ def summarise_species(args):
                 species_tallies[best_species] += 1
 
     total = sum(species_tallies.values())
+    if total == 0:
+        return '\t'.join([assembly_name, 'Error: no assembly positions meet threshold'])
     percentages = [(x, 100.0 * species_tallies[x] / total) for x in species_names]
     percentages = sorted(percentages, reverse=True, key=lambda x: x[1])
 
     assembly_size = sum(contig_lengths.values())
     uncalled = assembly_size - total
     uncalled_percent = 100.0 * uncalled / assembly_size
-
-    assembly_name = os.path.basename(result_file).replace('_painted.tsv', '')
 
     output = [assembly_name, '%.4f' % uncalled_percent]
     for p in percentages[:top_num]:
