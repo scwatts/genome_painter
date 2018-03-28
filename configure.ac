@@ -1,5 +1,5 @@
 # Initialisation
-AC_INIT([genome_painter], [0.0.1], [s.watts2@student.unimelb.edu.au])
+AC_INIT([genome_painter], [0.0.3], [s.watts2@student.unimelb.edu.au])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 
 # Static compiler option
