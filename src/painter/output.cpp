@@ -62,7 +62,7 @@ void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::v
                 }
 
                 // Add to buffer
-                buffer_size += snprintf(buffer+buffer_size, 5000, "%s\t%zd", fasta_paint.name.c_str(), position);
+                buffer_size += snprintf(buffer+buffer_size, 5000, "%s\t%zu", fasta_paint.name.c_str(), position);
                 for (auto probability : paint_bucket.probabilities) {
                     buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "\t%f", probability);
                 }

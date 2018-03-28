@@ -16,13 +16,13 @@ namespace paint {
 
 struct PaintBucket {
     std::vector<float> probabilities;
-    float max_probability;
+    float max_probability = 0;
 
-    PaintBucket(std::vector<float> &_probablities) :
+    explicit PaintBucket(std::vector<float> &_probablities) :
         probabilities(std::move(_probablities)),
         max_probability(*std::max_element(probabilities.begin(), probabilities.end())) { }
 
-    PaintBucket(size_t _probability_size) { probabilities.reserve(_probability_size); }
+    explicit PaintBucket(size_t _probability_size) { probabilities.reserve(_probability_size); }
 };
 
 struct FastaPaint {

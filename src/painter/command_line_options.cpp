@@ -148,7 +148,7 @@ Options get_arguments(int argc, char **argv) {
     unsigned int available_threads = std::thread::hardware_concurrency();
     if (available_threads > 1 && options.threads > available_threads) {
         print_help(stderr);
-        fprintf(stderr, "\n%s: error: only %d threads are available\n", argv[0], available_threads);
+        fprintf(stderr, "\n%s: error: only %u threads are available\n", argv[0], available_threads);
         exit(1);
     } else if (options.threads > 64) {
         print_help(stderr);

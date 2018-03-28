@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     unsigned int iteration = 0;
     while (true) {
         ++iteration;
-        fprintf(stdout, "Iteration %d:\n", iteration);
+        fprintf(stdout, "Iteration %u:\n", iteration);
 
         // Read in some lines and add them to kmer_db
         merge::add_partial_reads(fileobjects, fileobjects.size(), kmer_data.bincodes, kmer_data.kmer_db);

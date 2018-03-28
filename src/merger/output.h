@@ -20,7 +20,7 @@ struct KmerData {
     std::vector<file::SpeciesCount> *species_counts;
     merge::Bincodes bincodes;
 
-    KmerData(std::vector<file::SpeciesCount> *_species_counts): species_counts(_species_counts) {}
+    explicit KmerData(std::vector<file::SpeciesCount> *_species_counts): species_counts(_species_counts) {}
 };
 
 struct Parameters {
