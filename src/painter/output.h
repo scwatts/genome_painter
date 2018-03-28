@@ -10,6 +10,9 @@
 #include "merger/file.h"
 
 
+#define CHUNK_SIZE 1024 * 25
+
+
 namespace output {
 
 

@@ -35,6 +35,14 @@ int main(int argc, char *argv[]) {
         #pragma omp critical
         fprintf(stdout, "Painting %s\n", options.genome_fps[i].c_str());
         for (auto& fasta : fastas) {
+            // Check that the FASTA name is not excessively large. Simplifies zlib buffering
+            // TODO: move this before database loading so that errors are raised early
+            if (fasta.name.size() > MAX_FASTA_DESC_LEN) {
+                fprintf(stderr, "Input file has %s an excessively large ", options.genome_fps[i].c_str());
+                fprintf(stderr, "FASTA description (over %d characters), please truncate and try again\n", MAX_FASTA_DESC_LEN);
+                // TODO: confirm how exits are handled by openmp
+                exit(1);
+            }
             // Skip sequences less than size of kmer
             if (fasta.sequence.size() < KMER_SIZE) {
                 continue;
@@ -46,7 +54,7 @@ int main(int argc, char *argv[]) {
         // Write painted genome
         #pragma omp critical
         fprintf(stdout, "Writing results for %s\n", options.genome_fps[i].c_str());
-        std::string output_suffix = "_painted.tsv";
+        std::string output_suffix = "_painted.tsv.gz";
         std::string output_fp = output::construct_output_fp(options.genome_fps[i], output_suffix, options.output_dir);
         output::write_painted_genome(fasta_painting, database.header.species_counts, output_fp);
     }

@@ -11,6 +11,9 @@
 #include <sys/stat.h>
 
 
+#define MAX_FASTA_DESC_LEN 65536
+
+
 namespace common {
 
 

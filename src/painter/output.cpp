@@ -1,6 +1,11 @@
 #include "output.h"
 
 
+
+
+#include "zlib.h"
+
+
 namespace output {
 
 
@@ -25,11 +30,22 @@ std::string construct_output_fp(std::string &genome_fp, std::string &suffix, std
 
 
 void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::vector<file::SpeciesCount> species_counts, std::string &output_fp) {
-    FILE *output_fh = fopen(output_fp.c_str(), "w");
+    gzFile output_fh = gzopen(output_fp.c_str(), "wb");
+    char *buffer = (char *)malloc(CHUNK_SIZE);
+    int buffer_size = 0;
+    size_t line_size = (2 + species_counts.size()) +                /* separators */
+                       MAX_FASTA_DESC_LEN +                         /* contig name */
+                       sizeof(size_t) +                             /* position */
+                       (PROB_FIELD_SIZE * species_counts.size());   /* probabilities */
 
     // Header
     for (const auto& species_count: species_counts) {
-        fprintf(output_fh, "#%s\n", species_count.name.c_str());
+        // Using very conservative line size here but must ensure we don't discard bytes
+        if ( (buffer_size + line_size) > CHUNK_SIZE) {
+            gzwrite(output_fh, buffer, buffer_size);
+            buffer_size = 0;
+        }
+        buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%s\n", species_count.name.c_str());
     }
 
     // Data
@@ -37,19 +53,30 @@ void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::v
         size_t position = 0;
         for (const auto& paint_bucket : fasta_paint.paint) {
             position++;
-
             // Write only if we have probabilities
             if (!paint_bucket.probabilities.empty()) {
-                fprintf(output_fh, "%s\t%lu", fasta_paint.name.c_str(), position);
-                for (auto probability : paint_bucket.probabilities) {
-                    fprintf(output_fh, "\t%f", probability);
+                // Empty buffer if it's full
+                if ( (buffer_size + line_size) > CHUNK_SIZE) {
+                    gzwrite(output_fh, buffer, buffer_size);
+                    buffer_size = 0;
                 }
-                fprintf(output_fh, "\n");
+
+                // Add to buffer
+                buffer_size += snprintf(buffer+buffer_size, 5000, "%s\t%zd", fasta_paint.name.c_str(), position);
+                for (auto probability : paint_bucket.probabilities) {
+                    buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "\t%f", probability);
+                }
+                buffer[buffer_size++] = '\n';
             }
         }
+        // Flush buffer
+        gzwrite(output_fh, buffer, buffer_size);
+        buffer_size = 0;
     }
 
-    fclose(output_fh);
+    // Deallocate resources
+    free(buffer);
+    gzclose(output_fh);
 }
 
 
