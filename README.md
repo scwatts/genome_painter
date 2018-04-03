@@ -1,6 +1,9 @@
 # GenomePainter
 Paint genomes with taxonomic probabilities using *k*-mers from curated datasets
 
+
+![Example plot](http://image.ibb.co/hs2mhH/example_plot.png)
+
 ## Installation
 ### Quick
 Statically linked binaries for generic amd64 linux can be found under the GitHub releases page. Downloading and extracting these binaries will provide immediate access.
@@ -44,7 +47,15 @@ To perform genome painting, all that is required is a database and one or more i
 During painting both the forward and reverse strand are considered. The *k*-mer with the highest probability for each position is selected. Painting a genome produces a single tab-delimited file for each input genome. The output file contains a set of all taxa probabilities for each position which has a hit in the database. See below for visualising the probabilities.
 The use of threads here can greatly reduce the runtime of painting (the process becomes disk I/O bound eventually).
 
-## Visualising results
-The data is straightforward  to plot using a variety of tools. Here is an example using `R` and `ggplot2` ([see here for script](https://github.com/scwatts/paint_plotter)):
+### Visualising results
+GenomePainter is distributed with a Python3 script to generate an interactive plots of results. This script requires the plot.ly Python library to be installed prior to use:
+```bash
+pip3 install --user plotly
+```
 
-![Example Plot](https://image.ibb.co/kvymqx/example_plot.png)
+The script accepts both uncompressed and gzipped painted genomes. To generate the interactive you can run:
+```bash
+./plot_painting.py --input_fp output/genome_1_painted.tsv.gz --output_fp plots/genome_1_painted.html
+```
+
+Output plots can be viewed using any modern web browers. An example plot can be found at <https://paint.stephen.ac>.
