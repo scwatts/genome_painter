@@ -2,7 +2,7 @@
 Paint genomes with taxonomic probabilities using *k*-mers from curated datasets
 
 
-![Example plot](http://image.ibb.co/hs2mhH/example_plot.png)
+![Example plot](http://image.ibb.co/gTrxpx/example_plot.png)
 
 ## Installation
 ### Quick
