@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""
+'''
 Summarise species composition of Genome Painter results into blocks of n size and generate plot.
 
 Output is an interactive plotly plot which can be viewed in a modern web brower
 
 Example usage:
     ./plot_painting.py --genome_painter_fp genome_painter_results.tsv.gz --output_fp genome_painter_plot.html
-"""
+'''
 
 
 import argparse
@@ -140,9 +140,10 @@ def main():
         layout = {'shapes': contig_shapes}
     else:
         layout = plotly.graph_objs.Layout()
+    layout['yaxis'] = dict(range=[-5, 5])
 
     # Create plot
-    plotly.offline.plot({'data': traces, 'layout': layout}, show_link=False, auto_open=False, filename=output_fp)
+    plotly.offline.plot({'data': traces, 'layout': layout}, show_link=False, auto_open=False, filename=args.output_fp)
 
 
 def get_filehandle_class(filepath):
