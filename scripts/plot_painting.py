@@ -21,7 +21,7 @@ import plotly.graph_objs
 SHADING_TEMPLATE = {
         'type': 'rect',
         'xref': 'x',
-        'yref': 'y',
+        'yref': 'paper',
         'x0': None,
         'y0': 0,
         'x1': None,
