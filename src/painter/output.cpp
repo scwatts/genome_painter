@@ -29,23 +29,35 @@ std::string construct_output_fp(std::string &genome_fp, std::string &suffix, std
 }
 
 
-void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, std::vector<file::SpeciesCount> species_counts, std::string &output_fp) {
+void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, db::HeaderInfo db_header, std::vector<genome::FastaRecord> &fastas, std::string &output_fp) {
     gzFile output_fh = gzopen(output_fp.c_str(), "wb");
     char *buffer = (char *)malloc(CHUNK_SIZE);
     int buffer_size = 0;
-    size_t line_size = (2 + species_counts.size()) +                /* separators */
-                       MAX_FASTA_DESC_LEN +                         /* contig name */
-                       sizeof(size_t) +                             /* position */
-                       (PROB_FIELD_SIZE * species_counts.size());   /* probabilities */
+    size_t line_size = (2 + db_header.species_counts.size()) +                  /* separators */
+                       MAX_FASTA_DESC_LEN +                                     /* contig name */
+                       sizeof(size_t) +                                         /* position */
+                       (PROB_FIELD_SIZE * db_header.species_counts.size());     /* probabilities */
 
-    // Header
-    for (const auto& species_count: species_counts) {
+    // TODO: this is repeatitive, can we simplify?
+    // Header. Group count and names
+    buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%d\n", db_header.species_num);
+    for (const auto& species_count : db_header.species_counts) {
         // Using very conservative line size here but must ensure we don't discard bytes
         if ( (buffer_size + line_size) > CHUNK_SIZE) {
             gzwrite(output_fh, buffer, buffer_size);
             buffer_size = 0;
         }
         buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%s\n", species_count.name.c_str());
+    }
+    // FASTA record count and lengths
+    buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%zd\n", fastas.size());
+    for (const auto& fasta : fastas) {
+        // Using very conservative line size here but must ensure we don't discard bytes
+        if ( (buffer_size + line_size) > CHUNK_SIZE) {
+            gzwrite(output_fh, buffer, buffer_size);
+            buffer_size = 0;
+        }
+        buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%s\t%zd\n", fasta.name.c_str(), fasta.sequence.size());
     }
 
     // Data

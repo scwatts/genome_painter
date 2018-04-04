@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     fprintf(stdout, "Painting genomes...\n");
     #pragma omp parallel for schedule(static, 1)
     for (size_t i = 0; i < options.genome_fps.size(); ++i) {
-        // Get in FASTA records
+        // Read in FASTA records
         #pragma omp critical
         fprintf(stdout, "Loading %s\n", options.genome_fps[i].c_str());
         std::vector<genome::FastaRecord> fastas = genome::read_fasta_records(options.genome_fps[i]);
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
         fprintf(stdout, "Writing results for %s\n", options.genome_fps[i].c_str());
         std::string output_suffix = "_painted.tsv.gz";
         std::string output_fp = output::construct_output_fp(options.genome_fps[i], output_suffix, options.output_dir);
-        output::write_painted_genome(fasta_painting, database.header.species_counts, output_fp);
+        output::write_painted_genome(fasta_painting, database.header, fastas, output_fp);
     }
 
     return 0;
