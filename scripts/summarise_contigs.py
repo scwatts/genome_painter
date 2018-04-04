@@ -14,7 +14,9 @@ Example usage:
 """
 
 import argparse
+import gzip
 import os
+import sys
 
 
 def get_arguments():
@@ -22,7 +24,7 @@ def get_arguments():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('input', type=str,
-                        help='A tsv file from paint_genome')
+                        help='A tsv file from paint_genome (can be gzipped)')
     parser.add_argument('--threshold', type=float, required=False, default=0.9,
                         help='Minimum probability threshold - positions with a max probability '
                              'lower than this will be ignored')
@@ -35,18 +37,18 @@ def get_arguments():
 
 def main():
     args = get_arguments()
-
     summarise_contigs(args.input, args.threshold, args.top_num)
 
 
 def summarise_contigs(result_file, threshold, top_num):
-    assembly_name = os.path.basename(result_file).replace('_painted.tsv', '')
     species_names = get_species_names(result_file)
     species_tallies = {x: 0 for x in species_names}
     contig_tallies = {}
     contig_names = []
     contig_lengths = {}
-    with open(result_file, 'rt') as result:
+
+    open_func = get_open_function(result_file)
+    with open_func(result_file, 'rt') as result:
         for line in result:
             if line.startswith('#'):
                 continue
@@ -67,7 +69,7 @@ def summarise_contigs(result_file, threshold, top_num):
 
     total = sum(species_tallies.values())
     if total == 0:
-        return '\t'.join([assembly_name, 'Error: no assembly positions meet threshold'])
+        sys.exit('Error: no assembly positions meet threshold')
     percentages = [(x, 100.0 * species_tallies[x] / total) for x in species_names]
     percentages = sorted(percentages, reverse=True, key=lambda x: x[1])
 
@@ -87,7 +89,9 @@ def summarise_contigs(result_file, threshold, top_num):
 
 def get_species_names(result_file):
     species_names = []
-    with open(result_file, 'rt') as result:
+
+    open_func = get_open_function(result_file)
+    with open_func(result_file, 'rt') as result:
         for line in result:
             if line.startswith('#'):
                 species_names.append(line.strip()[1:])
@@ -99,6 +103,38 @@ def get_species_names(result_file):
 def print_header(top_species):
     header = ['Contig', 'Length'] + top_species
     print('\t'.join(header))
+
+
+def get_compression_type(filename):
+    """
+    Attempts to guess the compression (if any) on a file using the first few bytes.
+    http://stackoverflow.com/questions/13044562
+    """
+    magic_dict = {'gz': (b'\x1f', b'\x8b', b'\x08'),
+                  'bz2': (b'\x42', b'\x5a', b'\x68'),
+                  'zip': (b'\x50', b'\x4b', b'\x03', b'\x04')}
+    max_len = max(len(x) for x in magic_dict)
+    with open(filename, 'rb') as unknown_file:
+        file_start = unknown_file.read(max_len)
+    compression_type = 'plain'
+    for file_type, magic_bytes in magic_dict.items():
+        if file_start.startswith(magic_bytes):
+            compression_type = file_type
+    if compression_type == 'bz2':
+        quit_with_error('cannot use bzip2 format - use gzip instead')
+    if compression_type == 'zip':
+        quit_with_error('cannot use zip format - use gzip instead')
+    return compression_type
+
+
+def get_open_function(filename):
+    """
+    Returns either open or gzip.open, as appropriate for the file.
+    """
+    if get_compression_type(filename) == 'gz':
+        return gzip.open
+    else:  # plain text
+        return open
 
 
 if __name__ == '__main__':
