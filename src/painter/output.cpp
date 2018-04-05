@@ -1,11 +1,6 @@
 #include "output.h"
 
 
-
-
-#include "zlib.h"
-
-
 namespace output {
 
 
@@ -38,26 +33,15 @@ void write_painted_genome(std::vector<paint::FastaPaint> &fasta_painting, db::He
                        sizeof(size_t) +                                         /* position */
                        (PROB_FIELD_SIZE * db_header.species_counts.size());     /* probabilities */
 
-    // TODO: this is repeatitive, can we simplify?
-    // Header. Group count and names
-    buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%d\n", db_header.species_num);
+    // Header. Group count and names. Using BUFFER_ADD macro for brevity
+    BUFFER_ADD(buffer, buffer_size, output_fh, "#%d\n", db_header.species_num);
     for (const auto& species_count : db_header.species_counts) {
-        // Using very conservative line size here but must ensure we don't discard bytes
-        if ( (buffer_size + line_size) > CHUNK_SIZE) {
-            gzwrite(output_fh, buffer, buffer_size);
-            buffer_size = 0;
-        }
-        buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%s\n", species_count.name.c_str());
+        BUFFER_ADD(buffer, buffer_size, output_fh, "#%s\n", species_count.name.c_str());
     }
     // FASTA record count and lengths
-    buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%zd\n", fastas.size());
+    BUFFER_ADD(buffer, buffer_size, output_fh, "#%zd\n", fastas.size());
     for (const auto& fasta : fastas) {
-        // Using very conservative line size here but must ensure we don't discard bytes
-        if ( (buffer_size + line_size) > CHUNK_SIZE) {
-            gzwrite(output_fh, buffer, buffer_size);
-            buffer_size = 0;
-        }
-        buffer_size += snprintf(buffer+buffer_size, CHUNK_SIZE-buffer_size, "#%s\t%zd\n", fasta.name.c_str(), fasta.sequence.size());
+        BUFFER_ADD(buffer, buffer_size, output_fh, "#%s\t%zd\n", fasta.name.c_str(), fasta.sequence.size());
     }
 
     // Data
