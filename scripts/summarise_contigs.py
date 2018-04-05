@@ -45,7 +45,7 @@ def summarise_contigs(result_file, threshold, top_num):
     species_tallies = {x: 0 for x in species_names}
     contig_tallies = {}
     contig_names = []
-    contig_lengths = {}
+    contig_lengths = get_contig_lengths(result_file)
 
     open_func = get_open_function(result_file)
     with open_func(result_file, 'rt') as result:
@@ -58,7 +58,6 @@ def summarise_contigs(result_file, threshold, top_num):
                 contig_names.append(contig)
                 contig_tallies[contig] = {x: 0 for x in species_names}
             position = int(parts[1])
-            contig_lengths[contig] = position
             probabilities = [float(x) for x in parts[2:]]
             assert len(probabilities) == len(species_names)
             max_prob = max(probabilities)
@@ -89,15 +88,53 @@ def summarise_contigs(result_file, threshold, top_num):
 
 def get_species_names(result_file):
     species_names = []
-
+    species_count = None
     open_func = get_open_function(result_file)
     with open_func(result_file, 'rt') as result:
         for line in result:
             if line.startswith('#'):
-                species_names.append(line.strip()[1:])
+                line = line.strip()[1:]
+                try:
+                    _ = int(line)
+                    integer_line = True
+                except ValueError:
+                    integer_line = False
+                if integer_line:
+                    if species_count is None:
+                        species_count = int(line)
+                    else:  # we've hit the contig count
+                        break
+                else:
+                    species_names.append(line)
             else:
                 break
+    assert len(species_names) == species_count
     return species_names
+
+
+def get_contig_lengths(result_file):
+    contig_lengths = {}
+    integer_line_count = 0
+    contig_count = None
+    open_func = get_open_function(result_file)
+    with open_func(result_file, 'rt') as result:
+        for line in result:
+            if not line.startswith('#'):
+                break
+            line = line.strip()[1:]
+            try:
+                _ = int(line)
+                integer_line = True
+            except ValueError:
+                integer_line = False
+            if integer_line:
+                integer_line_count += 1
+                if integer_line_count == 2:
+                    contig_count = int(line)
+            elif integer_line_count == 2:
+                contig_name, contig_length = line.split('\t')
+                contig_lengths[contig_name] = int(contig_length)
+    return contig_lengths
 
 
 def print_header(top_species):
