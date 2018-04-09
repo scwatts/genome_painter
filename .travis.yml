@@ -1,0 +1,22 @@
+language: cpp
+compiler: g++
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++-7-dev
+      - g++-7
+
+branches:
+  only:
+    master
+
+script:
+  - export CXX='g++-7'
+  - ./autogen.sh
+  - ./configure
+  - make -j4
+  - make check

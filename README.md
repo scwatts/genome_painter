@@ -4,6 +4,8 @@ Paint genomes with taxonomic probabilities using *k*-mers from curated datasets
 
 ![Example plot](http://image.ibb.co/gTrxpx/example_plot.png)
 
+[![Build Status](https://travis-ci.org/scwatts/genome_painter.svg?branch=master)](https://travis-ci.org/scwatts/genome_painter)
+
 ## Installation
 ### Quick
 Statically linked binaries for generic amd64 linux can be found under the GitHub releases page. Downloading and extracting these binaries will provide immediate access.
