@@ -14,11 +14,11 @@ void add_partial_reads(std::vector<file::CountFile> &fileobjects, size_t species
     bool sync_bincodes = kmer_db.size() > MAX_DB_SIZE;
 
     // Reset bincount.min
-    bincodes.min = std::numeric_limits<common::ullong>::max();
+    bincodes.min = std::numeric_limits<common::bint>::max();
 
     for (size_t i = 0; i < fileobjects.size(); ++i) {
         size_t lines_read = 0;
-        common::ullong bincode = 0;
+        common::bint bincode = 0;
         std::vector<std::string> line_tokens;
         while (!common::get_line_tokens(fileobjects[i].filehandle, line_tokens)) {
             ++lines_read;

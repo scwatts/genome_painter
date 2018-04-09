@@ -14,9 +14,9 @@
 namespace count {
 
 
-typedef std::map<common::ullong,unsigned int> countmap;
+typedef std::map<common::bint,unsigned int> countmap;
 
-void collect_kmers(std::string &sequence, std::set<common::ullong> &sample_kmers);
+void collect_kmers(std::string &sequence, std::set<common::bint> &sample_kmers);
 
 
 } // namespace count

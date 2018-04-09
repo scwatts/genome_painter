@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
         std::vector<genome::FastaRecord> fastas = genome::read_fasta_records(options.genome_fps[i]);
 
         // Collect kmers in the genome
-        std::set<common::ullong> sample_kmers;
+        std::set<common::bint> sample_kmers;
         for (auto& fasta : fastas) {
             if (fasta.sequence.size() < KMER_SIZE) {
                 continue;

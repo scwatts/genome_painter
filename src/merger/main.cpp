@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (all_consumed) {
-            kmer_data.bincodes.min = std::numeric_limits<common::ullong>::max();
+            kmer_data.bincodes.min = std::numeric_limits<common::bint>::max();
             output::write_completed_counts(kmer_data, parameters);
             break;
         } else {

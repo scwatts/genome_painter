@@ -19,7 +19,7 @@ std::vector<PaintBucket> paint_sequence(genome::FastaRecord &fasta, db::Database
 
 bool get_probabilities(std::string &sequence, size_t i, std::vector<float> &probabilities, db::Database &database) {
     // Encode
-    common::ullong bincode;
+    common::bint bincode;
     if (! kmer::encode_kmer(sequence, i, bincode)) {
         return false;
     }

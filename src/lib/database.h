@@ -15,7 +15,7 @@
 #define DB_MAGIC "DBBR"
 #define SPECIES_NAME_FIELD_SIZE 64
 #define SPECIES_COUNT_FIELD_SIZE sizeof(unsigned int)
-#define BINCODE_FIELD_SIZE sizeof(common::ullong)
+#define BINCODE_FIELD_SIZE sizeof(common::bint)
 #define PROB_FIELD_SIZE sizeof(float)
 
 
@@ -32,7 +32,7 @@ struct HeaderInfo {
 struct Database {
     HeaderInfo header;
     std::string fp;
-    std::map<common::ullong,std::vector<float>> probabilities;
+    std::map<common::bint,std::vector<float>> probabilities;
 
     Database(std::string _fp): fp(_fp) {}
 };

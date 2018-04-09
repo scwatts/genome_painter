@@ -17,9 +17,9 @@
 namespace common {
 
 
-typedef unsigned long long ullong;
+typedef unsigned long long bint;
 // TODO: this still common?
-typedef std::map<common::ullong,std::vector<unsigned int>> countvecmap;
+typedef std::map<common::bint,std::vector<unsigned int>> countvecmap;
 
 // Filesystem
 bool is_file(std::string &filepath);

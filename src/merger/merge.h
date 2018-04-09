@@ -17,8 +17,8 @@ namespace merge {
 
 
 struct Bincodes {
-    common::ullong max = 0;
-    common::ullong min = std::numeric_limits<common::ullong>::max();
+    common::bint max = 0;
+    common::bint min = std::numeric_limits<common::bint>::max();
 };
 
 void add_partial_reads(std::vector<file::CountFile> &fileobjects, size_t species_count, Bincodes &bincodes, common::countvecmap &kmer_db);

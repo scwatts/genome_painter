@@ -43,8 +43,8 @@ void read_database(Database &database) {
 
     // Read in data
     while(!feof(db_fh)) {
-        common::ullong bincode;
-        fread(&bincode, sizeof(common::ullong), 1, db_fh);
+        common::bint bincode;
+        fread(&bincode, sizeof(common::bint), 1, db_fh);
 
         std::vector<float> probabilities;
         probabilities.reserve(database.header.species_num);

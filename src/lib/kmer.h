@@ -16,8 +16,8 @@ namespace kmer {
 
 
 bool complement(char nucleotide, char &complement_nucleotide);
-bool encode_kmer(std::string &sequence, size_t i, common::ullong &kmer_bincode);
-bool encode_nucleotide(char nucleotide, common::ullong &nucleotide_bincode);
+bool encode_kmer(std::string &sequence, size_t i, common::bint &kmer_bincode);
+bool encode_nucleotide(char nucleotide, common::bint &nucleotide_bincode);
 
 
 } // namespace kmer
