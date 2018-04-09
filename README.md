@@ -1,10 +1,10 @@
 # GenomePainter
-[![Build Status](https://travis-ci.org/scwatts/genome_painter.svg?branch=master)](https://travis-ci.org/scwatts/genome_painter) [![License GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-
 Paint genomes with taxonomic probabilities using *k*-mers from curated datasets
 
-
 ![Example plot](http://image.ibb.co/gTrxpx/example_plot.png)
+
+[![Build Status](https://travis-ci.org/scwatts/genome_painter.svg?branch=master)](https://travis-ci.org/scwatts/genome_painter) [![License GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 
 ## Installation
 ### Quick
