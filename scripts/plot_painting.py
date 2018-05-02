@@ -150,7 +150,7 @@ def get_filehandle_class(filepath):
     '''Checks if file is gzipped and returns appropriate file object handler'''
     with filepath.open('rb') as fh:
         if fh.read(2) == b'\037\213':
-            return lambda: gzip.open(filepath, 'rt')
+            return lambda: gzip.open(str(filepath), 'rt')
         else:
             return lambda: filepath.open('r')
 

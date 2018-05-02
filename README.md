@@ -57,7 +57,7 @@ pip3 install --user plotly
 
 The script accepts both uncompressed and gzipped painted genomes. To generate the interactive you can run:
 ```bash
-./plot_painting.py --input_fp output/genome_1_painted.tsv.gz --output_fp plots/genome_1_painted.html
+./plot_painting.py --genome_painter_fp output/genome_1_painted.tsv.gz --output_fp plots/genome_1_painted.html
 ```
 
 Output plots can be viewed using any modern web browers. An example plot can be found at <https://paint.stephen.ac>.
