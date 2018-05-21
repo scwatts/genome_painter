@@ -1,0 +1,5 @@
+Probabilistic models as filters, determine which buckets
+Use ccdbg for taxa buckets, search for k-mers, obtain counts
+Compute probability
+
+*Identify excessively common k-mers and filter
