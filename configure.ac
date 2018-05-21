@@ -3,7 +3,7 @@ AC_INIT([genome_painter], [0.0.6], [s.watts2@student.unimelb.edu.au])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 
 # Static compiler option
-AC_ARG_ENABLE([static-compile], AS_HELP_STRING([--enable-static-compile], [Compile static binary]),
+AC_ARG_ENABLE([static-compile], [AS_HELP_STRING([--enable-static-compile], [Compile static binary])],
 	[case "${enableval}" in
 	  no)  static_compile=false ;;
 	  *)   static_compile=true ;;
@@ -14,15 +14,14 @@ AM_CONDITIONAL([STATIC_COMPILE], [test "x$static_compile" = "xtrue"])
 AC_PROG_RANLIB
 AM_PROG_AR
 AC_PROG_CXX
-AC_CHECK_LIB(z, inflate, [], AC_MSG_ERROR(could not find zlib))
-AC_CHECK_LIB(gomp, main, [], AC_MSG_ERROR(could not find the OpenMP))
+AC_CHECK_LIB([z], [inflate],
+             [], [AC_MSG_ERROR([could not find zlib])])
+AC_CHECK_LIB([gomp], [main],
+             [], [AC_MSG_ERROR([could not find OpenMP])])
 
 # Set config header output
 AC_CONFIG_HEADERS([config.h])
 
 # Declare Makefile outputs
 AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile])
-
-# Disables rebuild rules (fix issue when cloning github repo and Makefile.am, configure.ac, and aclocal.m4 have borked datastamps)
-AM_MAINTAINER_MODE([disable])
 AC_OUTPUT
