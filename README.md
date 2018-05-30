@@ -86,3 +86,7 @@ The script accepts both uncompressed and gzipped painted genomes. To generate th
 ```
 
 Output plots can be viewed using any modern web browers. An example plot can be found at <https://paint.stephen.ac>.
+
+
+## License
+[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)
