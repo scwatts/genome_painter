@@ -13,11 +13,18 @@ Paint genomes with taxonomic probabilities using *k*-mers from curated datasets
 
 
 ## Installation
-### Quick
+### Pre-compiled
 Statically linked binaries for generic amd64 linux and ancillary Python scripts can be found under the GitHub releases page. `GenomePainter` can be run directly from these files (after downloading and extraction) without any required dependencies.
 
 
-### Slow (compiling from source)
+### Brew
+`GenomePainter` is available through the Brew and LinuxBrew package managers (thanks to [@tseemann](https://github.com/tseemann)):
+```bash
+brew install brewsci/bio/genome-painter
+```
+
+
+### Source
 If you're feeling brave, you can attempt to compile the source. Autotools has been used for the build system so this process should be somewhat robust. First ensure you have the appropriate tools installed:
 ```text
 C++11 (gcc-4.9.0+, clang-4.9.0+, etc)
