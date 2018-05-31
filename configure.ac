@@ -2,6 +2,10 @@
 AC_INIT([genome_painter], [0.0.7], [s.watts2@student.unimelb.edu.au])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 
+# Set default prefix
+test "$program_prefix" == NONE &&
+  program_transform_name="s&^&genomepainter_&;$program_transform_name"
+
 # Static compiler option
 AC_ARG_ENABLE([static-compile], [AS_HELP_STRING([--enable-static-compile], [Compile static binary])],
 	[case "${enableval}" in

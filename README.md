@@ -32,7 +32,7 @@ GNU m4
 Once these dependencies have been provisioned, compiling can be done by issuing:
 ```bash
 ./autogen.sh
-./configure --prefix=$MY_INSTALL_PREFIX --program-prefix=genomepainter_
+./configure --prefix=$MY_INSTALL_PREFIX
 make install -j4
 ```
 
