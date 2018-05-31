@@ -26,6 +26,7 @@ GNU getopt
 GNU automake
 GNU autoconf
 GNU autoconf-archive
+GNU m4
 ```
 
 Once these dependencies have been provisioned, compiling can be done by issuing:
@@ -82,7 +83,7 @@ pip3 install --user plotly
 
 The script accepts both uncompressed and gzipped painted genomes. To generate the interactive you can run:
 ```bash
-./plot_painting.py --genome_painter_fp output/genome_1_painted.tsv.gz --output_fp plots/genome_1_painted.html
+./genomepainter_plot_painting.py --genome_painter_fp output/genome_1_painted.tsv.gz --output_fp plots/genome_1_painted.html
 ```
 
 Output plots can be viewed using any modern web browers. An example plot can be found at <https://paint.stephen.ac>.
