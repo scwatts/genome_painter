@@ -9,6 +9,7 @@ Paint genomes with taxonomic probabilities using *k*-mers from curated datasets
 ## Table of contents
 * [Installation](#installation)
 * [Usage](#usage)
+* [Contributors](#contributors)
 * [License](#license)
 
 
@@ -94,6 +95,12 @@ The script accepts both uncompressed and gzipped painted genomes. To generate th
 ```
 
 Output plots can be viewed using any modern web browers. An example plot can be found at <https://paint.stephen.ac>.
+
+
+## Contributors
+* **[Ryan Wick](https://github.com/rrwick)**
+  * Offered considerable intellectual input for basis of method
+  * Provided summary Python scripts (`summarise_contigs.py` and `summarise_species.py`)
 
 
 ## License
