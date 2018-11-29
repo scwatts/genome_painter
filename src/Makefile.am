@@ -5,9 +5,46 @@ AM_CXXFLAGS += -static
 endif
 
 # File sets
-count_kmers_fps = counter/command_line_options.cpp counter/output.cpp counter/count.cpp lib/common.cpp lib/genome.cpp lib/kmer.cpp
-generate_database_fps = merger/command_line_options.cpp merger/merge.cpp merger/file.cpp merger/output.cpp merger/probability.cpp lib/common.cpp
-paint_genome_fps = painter/command_line_options.cpp painter/paint.cpp painter/output.cpp lib/common.cpp lib/genome.cpp lib/kmer.cpp lib/database.cpp
+common_fps = lib/common.cpp lib/common.h
+genome_fps = lib/genome.cpp lib/genome.h lib/kseq.h
+kmer_fps = lib/kmer.cpp lib/kmer.h
+
+count_kmers_fps =                    \
+		counter/command_line_options.cpp \
+		counter/command_line_options.h   \
+		counter/output.cpp               \
+		counter/output.h                 \
+		counter/count.cpp                \
+		counter/count.h                  \
+		$(genome_fps)                    \
+		$(kmer_fps)                      \
+		$(common_fps)
+
+generate_database_fps =             \
+		merger/command_line_options.cpp \
+		merger/command_line_options.h   \
+		merger/merge.cpp                \
+		merger/merge.h                  \
+		merger/file.cpp                 \
+		merger/file.h                   \
+		merger/output.cpp               \
+		merger/output.h                 \
+		merger/probability.cpp          \
+		merger/probability.h            \
+		$(common_fps)
+
+paint_genome_fps =                   \
+		painter/command_line_options.cpp \
+		painter/command_line_options.h   \
+		painter/paint.cpp                \
+		painter/paint.h                  \
+		painter/output.cpp               \
+		painter/output.h                 \
+		lib/database.cpp		             \
+		lib/database.h                   \
+		$(genome_fps)                    \
+		$(kmer_fps)                      \
+		$(common_fps)
 
 # Static libraries
 lib_LIBRARIES = libcount_kmers.a libgenerate_database.a libpaint_genome.a

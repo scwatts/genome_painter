@@ -12,7 +12,6 @@
 
 
 #include "lib/common.h"
-#include "lib/version.h"
 
 
 namespace cmdline {

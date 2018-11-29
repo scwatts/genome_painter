@@ -11,6 +11,9 @@
 #include <sys/stat.h>
 
 
+#include "config.h"
+
+
 #define MAX_FASTA_DESC_LEN 65536
 
 

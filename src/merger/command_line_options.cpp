@@ -32,7 +32,7 @@ void print_help(FILE *stdst) {
 
 void print_version(FILE *stdst) {
     fprintf(stdst, "Program: GenerateDatabase\n");
-    fprintf(stdst, "Version %s\n", VERSION.c_str());
+    fprintf(stdst, "Version %s\n", PACKAGE_VERSION);
     fprintf(stdst, "Contact: Stephen Watts (s.watts2@student.unimelb.edu.au)\n");
 }
 
