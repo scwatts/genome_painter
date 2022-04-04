@@ -92,7 +92,6 @@ class LabelledContig(object):
         if not self.positions:
             return
         species_count = len(self.probabilities[self.positions[0]])
-        smoothed_data = [[] for _ in range(species_count)]
         for i in range(species_count):
             probs = [self.probabilities[p][i] for p in self.positions]
             smoothed_probs = smooth_data(probs, bandwidth)
@@ -168,7 +167,6 @@ class LabelledContig(object):
 
         return initial_blocks
 
-
     def merge_blocks(self, initial_blocks, threshold_2):
         """
         This function merges blocks:
@@ -181,7 +179,8 @@ class LabelledContig(object):
             species, start, end = initial_blocks[i]
             while i < len(initial_blocks)-1:
                 next_species, next_start, next_end = initial_blocks[i+1]
-                if species == next_species and self.all_above_threshold(species, end, next_start, threshold_2):
+                if species == next_species and \
+                        self.all_above_threshold(species, end, next_start, threshold_2):
                     end = next_end
                     i += 1
                 else:
@@ -189,7 +188,6 @@ class LabelledContig(object):
             merged_blocks.append((species, start, end))
             i += 1
         return merged_blocks
-
 
     def all_above_threshold(self, species, start, end, threshold):
         """
@@ -294,7 +292,7 @@ def get_contig_lengths(result_file):
 def get_compression_type(filename):
     """
     Attempts to guess the compression (if any) on a file using the first few bytes.
-    http://stackoverflow.com/questions/13044562
+    https://stackoverflow.com/questions/13044562
     """
     magic_dict = {'gz': (b'\x1f', b'\x8b', b'\x08'),
                   'bz2': (b'\x42', b'\x5a', b'\x68'),
@@ -332,6 +330,6 @@ if __name__ == '__main__':
 
 def test_smooth_data():
     data = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]
-    assert smooth_data(data, 1) ==  pytest.approx([0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0])
-    assert smooth_data(data, 3) ==  pytest.approx([0.0, 0.0, 1/3, 1/3, 1/3, 0.0, 0.0])
-    assert smooth_data(data, 5) ==  pytest.approx([0.0, 0.25, 0.2, 0.2, 0.2, 0.25, 0.0])
+    assert smooth_data(data, 1) == pytest.approx([0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0])
+    assert smooth_data(data, 3) == pytest.approx([0.0, 0.0, 1/3, 1/3, 1/3, 0.0, 0.0])
+    assert smooth_data(data, 5) == pytest.approx([0.0, 0.25, 0.2, 0.2, 0.2, 0.25, 0.0])
